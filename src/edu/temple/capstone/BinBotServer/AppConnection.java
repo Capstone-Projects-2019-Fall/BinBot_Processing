@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 public interface AppConnection
 {
-	void send(InputStream in);
+	void sendToApp(InputStream in);
 	InputStream recieve();
 	void listen();
 }
