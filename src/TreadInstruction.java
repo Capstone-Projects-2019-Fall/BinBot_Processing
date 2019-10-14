@@ -4,6 +4,11 @@ import javafx.util.Pair;
 
 import java.util.List;
 
+/**
+ * <h1>TreadInstruction</h1>
+ * This class consists only of one static method "calcInstructions", which is responsible for calculating the
+ * movements BinBot should take to navigate to a piece of waste.
+ */
 public interface TreadInstruction
 {
 	/**
