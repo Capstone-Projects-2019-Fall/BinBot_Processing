@@ -3,6 +3,18 @@ package edu.temple.capstone.BinBotServer;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * <h1>AppConnection</h1>
+ * The AppConnection class represents the network connection between the BinBot Mobile Application and the BinBot
+ * Server. Its methods allow the server to initiate and wait for a connection to be established, and then once it is
+ * established, data can be sent back and forth to the mobile application over a socket.
+ *
+ *
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @since   2019-10-13
+ */
 public interface AppConnection
 {
 	/**

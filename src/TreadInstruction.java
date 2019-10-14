@@ -6,8 +6,14 @@ import java.util.List;
 
 /**
  * <h1>TreadInstruction</h1>
- * This class consists only of one static method "calcInstructions", which is responsible for calculating the
- * movements BinBot should take to navigate to a piece of waste.
+ * The TreadInstruction class consists only of one static method "calcInstructions", which is responsible for
+ * calculating the movements BinBot should take to navigate to a piece of waste in regards to its treads.
+ *
+ *
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @since   2019-10-13
  */
 public interface TreadInstruction
 {

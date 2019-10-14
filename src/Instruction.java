@@ -1,17 +1,17 @@
 package edu.temple.capstone.BinBotServer;
 
-/******************************************************************************
- * Filename:		Instruction.java
- * Creation Date:	Wed 09 Oct 2019 05:06:28 PM EDT
- * Last Modified:	Wed 09 Oct 2019 05:11:57 PM EDT
- * Purpose:		Interface for the Instruction class in BinBot Server.
- *			This class is in charge of taking a matrix indicating
- *			the location of identified waste in an image (from
- *			opencv) and returning a json String that can be sent to
- *			and interpreted by BinBot to properly navigate and
- *			retrieve that trash.
- ******************************************************************************/
-
+/**
+ * <h1>Instruction</h1>
+ * The Instruction class consists of a single static method which is responsible for providing a json string which can
+ * be used to properly maneuver BinBot to retrieve trash when given a matrix from opencv. More details can be found in
+ * the method documentation itself.
+ *
+ *
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @since   2019-10-13
+ */
 public interface Instruction
 {
 	/**

@@ -2,6 +2,17 @@ package edu.temple.capstone.BinBotServer;
 
 import java.util.List;
 
+/**
+ * <h1>ArmInstruction</h1>
+ * The ArmInstruction class consists only of one static method "calcInstructions", which is responsible for calculating
+ * the movements BinBot should take to retrieve a piece of trash using the joints in its arm.
+ *
+ *
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @since   2019-10-13
+ */
 public interface ArmInstruction
 {
 	/**

@@ -2,14 +2,18 @@ package edu.temple.capstone.BinBotServer;
 
 import java.awt.image.BufferedImage;
 
-/******************************************************************************
- * Filename:		OpenCVWrapper.java
- * Creation Date:	Wed 09 Oct 2019 05:06:28 PM EDT
- * Last Modified:	Wed 09 Oct 2019 05:11:57 PM EDT
- * Purpose:			Wrapper for handling openCV logic. Created by providing an
- *                  and used to locate identified waste.
- ******************************************************************************/
-
+/**
+ * <h1>OpenCVWrapper</h1>
+ * The OpenCVWrapper class serves as an easy to use front end for initiating OpenCV on an image and for retrieving
+ * data about the image, if waste has been located, where it has been located, its height, its width, and the matrix
+ * representation of that image itself.
+ *
+ *
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @since   2019-10-13
+ */
 public interface OpenCVWrapper
 {
 	/**
