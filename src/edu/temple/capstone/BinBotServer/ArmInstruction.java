@@ -9,7 +9,6 @@ import java.util.List;
  *
  *
  * @author Sean DiGirolamo
- * @version 1.0
  * @since   2019-10-13
  */
 public interface ArmInstruction
@@ -25,7 +24,6 @@ public interface ArmInstruction
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-09
 	 */
 	List<Double> calcInstructions(double x, double y, double w, double h);

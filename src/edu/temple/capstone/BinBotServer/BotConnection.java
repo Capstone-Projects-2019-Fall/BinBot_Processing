@@ -23,7 +23,6 @@ public interface BotConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	void sendToBot(InputStream in);
@@ -35,7 +34,6 @@ public interface BotConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	OutputStream recieve();
@@ -47,7 +45,6 @@ public interface BotConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	void initiate();

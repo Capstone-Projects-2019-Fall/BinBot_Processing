@@ -26,7 +26,6 @@ public interface TreadInstruction
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-09
 	 */
 	List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h);

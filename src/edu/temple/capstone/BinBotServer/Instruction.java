@@ -8,7 +8,6 @@ package edu.temple.capstone.BinBotServer;
  *
  *
  * @author Sean DiGirolamo
- * @version 1.0
  * @since   2019-10-13
  */
 public interface Instruction
@@ -42,7 +41,6 @@ public interface Instruction
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-09
 	 */
 	String getJsonInstructions(Object[][] matrix);

@@ -23,7 +23,6 @@ public interface AppConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	void sendToApp(InputStream in);
@@ -35,19 +34,17 @@ public interface AppConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	OutputStream recieve();
 
 	/**
 	 * This method should be the very first method called by this object. It initiates the socket connection, and doesn't
-	 * complete until a client has connected. This must happen before any other methods or data tranfers can complete
+	 * complete until a client has connected. This must happen before any other methods or data transfers can complete
 	 *
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	void initiate();

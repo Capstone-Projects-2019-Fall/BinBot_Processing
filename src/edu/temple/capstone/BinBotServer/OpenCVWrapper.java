@@ -22,7 +22,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	BufferedImage getAppImg();
@@ -34,7 +33,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	Object[][] getMatrix();
@@ -45,7 +43,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	double getX();
@@ -56,7 +53,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	double getY();
@@ -67,7 +63,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	double getHeight();
@@ -78,7 +73,6 @@ public interface OpenCVWrapper
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @version 1.0
 	 * @since   2019-10-11
 	 */
 	double getWidth();
