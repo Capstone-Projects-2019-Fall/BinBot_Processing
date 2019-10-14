@@ -17,7 +17,7 @@ import java.io.OutputStream;
 public interface AppConnection
 {
 	/**
-	 * This method takes as input an InputStream which will be sent over the socket to whatever client is connected to
+	 * This method takes as input a string which will be sent over the socket to whatever client is connected to
 	 * it, in this case the mobile application
 	 *
 	 *
@@ -25,18 +25,18 @@ public interface AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	void sendToApp(InputStream in);
+	void sendToApp(String s);
 
 	/**
-	 * This method instructs the server to wait to recieve a bitstream from the client. This bitstream will be returned
-	 * to the caller as an outputStream
+	 * This method instructs the server to wait to recieve a bitstream from the client. This bitstream will be converted
+	 * to a string and returned to the caller
 	 *
 	 *
 	 *
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	OutputStream recieve();
+	String recieve();
 
 	/**
 	 * This method should be the very first method called by this object. It initiates the socket connection, and doesn't
