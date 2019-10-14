@@ -3,7 +3,6 @@ package edu.temple.capstone.BinBotServer;
 import java.util.List;
 
 /**
- * <h1>ArmInstruction</h1>
  * The ArmInstruction class consists only of one static method "calcInstructions", which is responsible for calculating
  * the movements BinBot should take to retrieve a piece of trash using the joints in its arm.
  *
@@ -16,7 +15,6 @@ import java.util.List;
 public interface ArmInstruction
 {
 	/**
-	 * <h1>calcInstructions(double x, double y, double w, double h)</h1>
 	 * This method takes as input, an x coordinate, a y coordinate, a width, and a height, all indicating the location
 	 * of an identified object in a matrix. Using these values, it will estimate a distance between the camera and the
 	 * object, and the angle that the camera is viewing the object at. The function will then generate a list of

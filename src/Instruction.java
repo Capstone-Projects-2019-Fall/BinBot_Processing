@@ -1,7 +1,6 @@
 package edu.temple.capstone.BinBotServer;
 
 /**
- * <h1>Instruction</h1>
  * The Instruction class consists of a single static method which is responsible for providing a json string which can
  * be used to properly maneuver BinBot to retrieve trash when given a matrix from opencv. More details can be found in
  * the method documentation itself.
@@ -15,7 +14,6 @@ package edu.temple.capstone.BinBotServer;
 public interface Instruction
 {
 	/**
-	 * <h1>getJsonInstructions(Object[][] matrix)</h1>
 	 * This method takes as input, a matrix of objects generated from OpenCV
 	 * computer vision and returns a json String of the format:
 	 * {

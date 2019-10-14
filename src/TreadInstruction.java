@@ -5,7 +5,6 @@ import javafx.util.Pair;
 import java.util.List;
 
 /**
- * <h1>TreadInstruction</h1>
  * The TreadInstruction class consists only of one static method "calcInstructions", which is responsible for
  * calculating the movements BinBot should take to navigate to a piece of waste in regards to its treads.
  *
@@ -18,7 +17,6 @@ import java.util.List;
 public interface TreadInstruction
 {
 	/**
-	 * <h1>calcInstructions(double x, double y, double w, double h)</h1>
 	 * This method takes as input, an x coordinate, a y coordinate, a width, and a height, all indicating the location
 	 * of an identified object in a matrix. Using these values, it will estimate a distance between the camera and the
 	 * object, and the angle that the camera is viewing the object at. The function will then generate a list of
