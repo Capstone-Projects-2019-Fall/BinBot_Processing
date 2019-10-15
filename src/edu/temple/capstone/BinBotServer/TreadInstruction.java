@@ -2,6 +2,7 @@ package edu.temple.capstone.BinBotServer;
 
 import javafx.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @since   2019-10-13
  */
-public interface TreadInstruction
+public class TreadInstruction
 {
 	/**
 	 * This method takes as input, an x coordinate, a y coordinate, a width, and a height, all indicating the location
@@ -28,5 +29,9 @@ public interface TreadInstruction
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-09
 	 */
-	List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h);
+	List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
+		List <Pair<Double, Double>> retval = new ArrayList<>();
+		retval.add(new Pair<Double, Double>(0.0, 0.0));
+		return retval;
+	}
 }
