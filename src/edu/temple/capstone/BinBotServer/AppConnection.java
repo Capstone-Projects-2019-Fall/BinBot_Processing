@@ -14,7 +14,7 @@ import java.io.OutputStream;
  * @version 1.0
  * @since   2019-10-13
  */
-public interface AppConnection
+public class AppConnection
 {
 	/**
 	 * This method takes as input a string which will be sent over the socket to whatever client is connected to
@@ -25,7 +25,9 @@ public interface AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	void sendToApp(String s);
+	public static void sendToApp(String s) {
+
+	}
 
 	/**
 	 * This method instructs the server to wait to recieve a bitstream from the client. This bitstream will be converted
@@ -36,7 +38,9 @@ public interface AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	String recieve();
+	public static String recieve() {
+		return "";
+	}
 
 	/**
 	 * This method should be the very first method called by this object. It initiates the socket connection, and doesn't
@@ -47,5 +51,7 @@ public interface AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	void initiate();
+	public static void initiate() {
+
+	}
 }
