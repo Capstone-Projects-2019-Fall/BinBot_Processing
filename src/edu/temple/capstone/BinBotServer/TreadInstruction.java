@@ -29,7 +29,7 @@ public class TreadInstruction
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-09
 	 */
-	List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
+	public static List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
 		List <Pair<Double, Double>> retval = new ArrayList<>();
 		retval.add(new Pair<Double, Double>(0.0, 0.0));
 		return retval;
