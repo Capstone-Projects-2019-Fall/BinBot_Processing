@@ -1,7 +1,8 @@
 package edu.temple.capstone.BinBotServer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * The AppConnection class represents the network connection between the BinBot Mobile Application and the BinBot
@@ -16,6 +17,25 @@ import java.io.OutputStream;
  */
 public class AppConnection
 {
+	private ServerSocket servSock;
+	private Socket sock = null;
+	private DataOutputStream out = null;
+	private DataInputStream in = null;
+
+	/**
+	 * This constructor creates an AppConnection object which can be used for initiating and communicating with
+	 * the BinBot mobile application. It takes the port number the server should listen for connections on as its only
+	 * argument.
+	 *
+	 *
+	 *
+	 * @author  Sean DiGirolamo
+	 * @since   2019-10-11
+	 */
+	public AppConnection(int port) throws IOException {
+		servSock = new ServerSocket(port);
+	}
+
 	/**
 	 * This method takes as input a string which will be sent over the socket to whatever client is connected to
 	 * it, in this case the mobile application
@@ -25,8 +45,8 @@ public class AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	public static void sendToApp(String s) {
-
+	public void sendToApp(String s) throws IOException {
+		out.writeBytes(s);
 	}
 
 	/**
@@ -38,8 +58,8 @@ public class AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	public static String recieve() {
-		return "";
+	public String recieve() throws IOException {
+		return in.readUTF();
 	}
 
 	/**
@@ -51,7 +71,9 @@ public class AppConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	public static void initiate() {
-
+	public void accept() throws IOException {
+		sock = servSock.accept();
+		out = new DataOutputStream(sock.getOutputStream());
+		in = new DataInputStream(new BufferedInputStream(sock.getInputStream()));
 	}
 }

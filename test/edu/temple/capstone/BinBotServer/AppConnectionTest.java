@@ -1,25 +1,31 @@
 package edu.temple.capstone.BinBotServer;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
 
 class AppConnectionTest
 {
-	AppConnection appConnection = new AppConnection();
+	private static AppConnection appConnection = null;
 
-	@Test
-	void sendToApp() {
-		appConnection.sendToApp("");
+	@BeforeAll
+	static void construct() throws IOException {
+		appConnection = new AppConnection(7001);
 	}
 
 	@Test
-	void recieve() {
-		assertEquals("", appConnection.recieve());
+	void sendToApp() throws IOException {
+		//appConnection.sendToApp("");
 	}
 
 	@Test
-	void initiate() {
-		appConnection.initiate();
+	void recieve() throws IOException {
+		//assertEquals("", appConnection.recieve());
+	}
+
+	@Test
+	void initiate() throws IOException {
+		//appConnection.accept();
 	}
 }
