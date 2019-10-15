@@ -10,7 +10,7 @@ package edu.temple.capstone.BinBotServer;
  * @author Sean DiGirolamo
  * @since   2019-10-13
  */
-public interface Instruction
+public class Instruction
 {
 	/**
 	 * This method takes as input, a matrix of objects generated from OpenCV
@@ -43,5 +43,7 @@ public interface Instruction
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-09
 	 */
-	String getJsonInstructions(Object[][] matrix);
+	public static String getJsonInstructions(Object[][] matrix) {
+		return "";
+	}
 }
