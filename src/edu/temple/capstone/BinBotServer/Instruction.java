@@ -1,5 +1,9 @@
 package edu.temple.capstone.BinBotServer;
 
+import javafx.util.Pair;
+
+import java.util.List;
+
 /**
  * The Instruction class consists of a single static method which is responsible for providing a json string which can
  * be used to properly maneuver BinBot to retrieve trash when given a matrix from opencv. More details can be found in
@@ -44,6 +48,10 @@ public class Instruction
 	 * @since   2019-10-09
 	 */
 	public static String getJsonInstructions(Object[][] matrix) {
-		return "";
+		String retval = "";
+		List<Pair<Double, Double>> treads = TreadInstruction.calcInstructions(0, 0, 0, 0);
+		List<Double> arms = ArmInstruction.calcInstructions(0, 0, 0, 0);
+
+		return retval;
 	}
 }

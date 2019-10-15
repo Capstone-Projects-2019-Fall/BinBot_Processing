@@ -24,5 +24,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="org.json:json:20190722" level="project" />
   </component>
 </module>
