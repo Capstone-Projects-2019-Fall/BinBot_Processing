@@ -1,6 +1,8 @@
 package edu.temple.capstone.BinBotServer;
 
 import javafx.util.Pair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -48,10 +50,28 @@ public class Instruction
 	 * @since   2019-10-09
 	 */
 	public static String getJsonInstructions(Object[][] matrix) {
-		String retval = "";
 		List<Pair<Double, Double>> treads = TreadInstruction.calcInstructions(0, 0, 0, 0);
 		List<Double> arms = ArmInstruction.calcInstructions(0, 0, 0, 0);
 
-		return retval;
+		JSONObject jo = new JSONObject().put("status", "PATROL").put("img", "");
+
+		JSONArray treadja = new JSONArray();
+		for (Pair pair : treads) {
+			treadja.put(treadja.length(),
+				new JSONObject()
+				.put("angle", pair.getKey())
+				.put("distance", pair.getValue()));
+		}
+		jo.put("treads", treadja);
+
+		JSONArray armja = new JSONArray();
+		for (Double d : arms) {
+			armja.put(armja.length(),
+				new JSONObject()
+				.put("angle", d));
+		}
+		jo.put("arms", treadja);
+
+		return jo.toString();
 	}
 }
