@@ -1,5 +1,6 @@
 package edu.temple.capstone.BinBotServer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @author Sean DiGirolamo
  * @since   2019-10-13
  */
-public interface ArmInstruction
+public class ArmInstruction
 {
 	/**
 	 * This method takes as input, an x coordinate, a y coordinate, a width, and a height, all indicating the location
@@ -26,5 +27,9 @@ public interface ArmInstruction
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-09
 	 */
-	List<Double> calcInstructions(double x, double y, double w, double h);
+	List<Double> calcInstructions(double x, double y, double w, double h) {
+		List<Double> retval = new ArrayList<>();
+		retval.add(0.0);
+		return retval;
+	}
 }
