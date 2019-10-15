@@ -27,7 +27,7 @@ public class ArmInstruction
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-09
 	 */
-	List<Double> calcInstructions(double x, double y, double w, double h) {
+	public static List<Double> calcInstructions(double x, double y, double w, double h) {
 		List<Double> retval = new ArrayList<>();
 		retval.add(0.0);
 		return retval;
