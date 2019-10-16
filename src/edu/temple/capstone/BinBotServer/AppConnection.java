@@ -69,7 +69,7 @@ public class AppConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @since   2019-10-11
+	 * @since   2019-10-14
 	 */
 	public void accept() throws IOException {
 		sock = servSock.accept();

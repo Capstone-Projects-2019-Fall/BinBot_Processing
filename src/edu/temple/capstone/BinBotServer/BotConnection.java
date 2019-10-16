@@ -1,7 +1,8 @@
 package edu.temple.capstone.BinBotServer;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * The BotConnection class represents the network connection between the BinBot Robot and the BinBot
@@ -14,8 +15,27 @@ import java.io.OutputStream;
  * @version 1.0
  * @since   2019-10-13
  */
-public interface BotConnection
+public class BotConnection
 {
+	private ServerSocket servSock;
+	private Socket sock = null;
+	private DataOutputStream out = null;
+	private DataInputStream in = null;
+
+	/**
+	 * This constructor creates a BotConnection object which can be used for initiating and communicating with
+	 * the BinBot Robot. It takes the port number the server should listen for connections on as its only
+	 * argument.
+	 *
+	 *
+	 *
+	 * @author  Sean DiGirolamo
+	 * @since   2019-10-16
+	 */
+	public BotConnection(int port) throws IOException {
+		servSock = new ServerSocket(port);
+	}
+
 	/**
 	 * This method takes as input a string which will be sent over the socket to whatever client is connected to
 	 * it, in this case the BinBot robot
@@ -25,7 +45,9 @@ public interface BotConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	void sendToBot(String in);
+	public void sendToBot(String s) throws IOException {
+		out.writeBytes(s);
+	}
 
 	/**
 	 * This method instructs the server to wait to recieve a bitstream from the client. This bitstream will be converted
@@ -36,7 +58,9 @@ public interface BotConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	String recieve();
+	public String recieve() throws IOException {
+		return in.readUTF();
+	}
 
 	/**
 	 * This method should be the very first method called by this object. It initiates the socket connection, and doesn't
@@ -45,7 +69,11 @@ public interface BotConnection
 	 *
 	 *
 	 * @author  Sean DiGirolamo
-	 * @since   2019-10-11
+	 * @since   2019-10-16
 	 */
-	void initiate();
+	public void accept() throws IOException {
+		sock = servSock.accept();
+		out = new DataOutputStream(sock.getOutputStream());
+		in = new DataInputStream(new BufferedInputStream(sock.getInputStream()));
+	}
 }
