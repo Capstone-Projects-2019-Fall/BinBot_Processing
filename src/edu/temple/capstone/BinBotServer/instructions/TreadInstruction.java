@@ -1,4 +1,4 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.instructions;
 
 import javafx.util.Pair;
 
@@ -31,7 +31,7 @@ public class TreadInstruction
 	 */
 	public static List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
 		List <Pair<Double, Double>> retval = new ArrayList<>();
-		retval.add(new Pair<Double, Double>(0.0, 0.0));
+		retval.add(new Pair<>(0.0, 0.0));
 		return retval;
 	}
 }

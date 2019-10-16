@@ -1,4 +1,4 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.instructions;
 
 import java.util.ArrayList;
 import java.util.List;

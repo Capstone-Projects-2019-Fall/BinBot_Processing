@@ -1,5 +1,6 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.connections;
 
+import edu.temple.capstone.BinBotServer.connections.AppConnection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

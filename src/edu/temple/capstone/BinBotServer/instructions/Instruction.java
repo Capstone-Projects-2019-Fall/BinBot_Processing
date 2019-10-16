@@ -1,4 +1,4 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.instructions;
 
 import javafx.util.Pair;
 import org.json.JSONArray;

@@ -1,5 +1,6 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.instructions;
 
+import edu.temple.capstone.BinBotServer.instructions.TreadInstruction;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
