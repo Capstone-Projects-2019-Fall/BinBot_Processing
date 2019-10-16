@@ -5,8 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class AppConnectionTest
 {
+	private static final String JSON_TEST = "{\"message\":\"Hello world!\"}";
 	private static AppConnection appConnection = null;
 
 	@BeforeAll
@@ -15,17 +18,10 @@ class AppConnectionTest
 	}
 
 	@Test
-	void sendToApp() throws IOException {
-		//appConnection.sendToApp("");
-	}
-
-	@Test
-	void recieve() throws IOException {
-		//assertEquals("", appConnection.recieve());
-	}
-
-	@Test
-	void initiate() throws IOException {
-		//appConnection.accept();
+	static void test() throws IOException {
+		appConnection.accept();
+		appConnection.sendToApp(JSON_TEST);
+		String recieved = appConnection.recieve();
+		assertEquals(JSON_TEST, recieved);
 	}
 }
