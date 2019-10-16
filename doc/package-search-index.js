@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"edu.temple.capstone.BinBotServer"}]
+packageSearchIndex = [{"l":"edu.temple.capstone.BinBotServer"},{"l":"edu.temple.capstone.BinBotServer.connections"},{"l":"edu.temple.capstone.BinBotServer.instructions"}]
