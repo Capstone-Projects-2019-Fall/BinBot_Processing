@@ -1,15 +1,26 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
-import edu.temple.capstone.BinBotServer.instructions.Instruction;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InstructionTest
 {
+	private Instruction jsonInstruction = null;
+	private Instruction objectInstruction = null;
+
+	private String json = "{\"status\":\"PATROL\",\"img\":\"temporary\",\"treads\":[{\"angle\":0.0,\"distance\":0.0}],\"arms\":[{\"angle\":0.0}]}";
+	private Object[][] o = new Object[1][1];
+
+	@BeforeAll
+	void pre() {
+		this.jsonInstruction = new Instruction(this.json);
+		this.objectInstruction = new Instruction(o);
+	}
 
 	@Test
-	void getJsonInstructions() {
-		assertEquals("{\"treads\":[{\"distance\":0,\"angle\":0}],\"img\":\"\",\"arms\":[{\"distance\":0,\"angle\":0}],\"status\":\"PATROL\"}", Instruction.getJsonInstructions(new Object[5][5]));
+	void json() {
+		assertEquals(this.json, this.jsonInstruction.json());
 	}
 }
