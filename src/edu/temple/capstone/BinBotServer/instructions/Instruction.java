@@ -93,7 +93,7 @@ public class Instruction
 	public String json() {
 		String retval = "{\"status\":\"" + this.status.toString() +"\",";
 
-		retval += "{\"img\":" + "\"temporary\",";
+		retval += "\"img\":" + "\"temporary\",";
 
 		retval += "\"treads\":[";
 		for (Pair pair : this.treads) {
