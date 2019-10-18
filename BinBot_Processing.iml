@@ -25,5 +25,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="org.json:json:20190722" level="project" />
+    <orderEntry type="library" name="org.apache.commons:commons-lang3:3.3.2" level="project" />
   </component>
 </module>
