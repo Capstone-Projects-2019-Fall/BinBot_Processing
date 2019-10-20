@@ -90,6 +90,13 @@ public class Instruction
 		this.arms.add(0.0);
 	}
 
+	/**
+	 * This method returns the Instruction class a a json string which can be sent to the BinBot robot and interpreted
+	 * as a set of commands to follow in the format described above.
+	 *
+	 * @author Sean DiGirolamo
+	 * @since 2019-10-20
+	 */
 	public String json() {
 		String retval = "{\"status\":\"" + this.status.toString() +"\",";
 
