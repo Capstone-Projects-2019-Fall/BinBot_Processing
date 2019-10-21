@@ -123,4 +123,14 @@ public class Instruction
 
 		return retval;
 	}
+
+	/**
+	 * This method returns the Buffered img contained within the Instruction
+	 *
+	 * @author Sean DiGirolamo
+	 * @since 2019-10-21
+	 */
+	public BufferedImage img() {
+		return this.img;
+	}
 }
