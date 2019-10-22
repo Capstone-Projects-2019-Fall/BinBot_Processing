@@ -3,8 +3,12 @@ package edu.temple.capstone.BinBotServer.instructions;
 import javafx.util.Pair;
 import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,7 +61,7 @@ public class Instruction
 
 		this.treads = new ArrayList<>();
 
-		this.img = null;
+		this.img = this.stringToBufferedImage(jsonObject.getString("img"));
 
 		for (Object o : jsonObject.getJSONArray("treads")) {
 			JSONObject jo = (JSONObject)o;
@@ -132,5 +136,27 @@ public class Instruction
 	 */
 	public BufferedImage img() {
 		return this.img;
+	}
+
+	private BufferedImage stringToBufferedImage(String s) {
+		BufferedImage retval = null;
+		try {
+			retval = ImageIO.read(new ByteArrayInputStream(s.getBytes()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return retval;
+	}
+
+	private String bufferedImageToString(BufferedImage bi) {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(bi, "jpg", out);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Arrays.toString(out.toByteArray());
+
 	}
 }
