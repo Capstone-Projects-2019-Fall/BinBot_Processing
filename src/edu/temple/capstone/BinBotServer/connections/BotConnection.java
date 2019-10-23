@@ -3,6 +3,7 @@ package edu.temple.capstone.BinBotServer.connections;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
 /**
  * The BotConnection class represents the network connection between the BinBot Robot and the BinBot
@@ -18,9 +19,7 @@ import java.net.Socket;
 public class BotConnection
 {
 	private ServerSocket servSock;
-	private Socket sock = null;
-	private DataOutputStream out = null;
-	private DataInputStream in = null;
+	private Socket sock;
 
 	/**
 	 * This constructor creates a BotConnection object which can be used for initiating and communicating with
@@ -46,7 +45,10 @@ public class BotConnection
 	 * @since   2019-10-11
 	 */
 	public void sendToBot(String s) throws IOException {
-		out.writeBytes(s);
+		OutputStream o = sock.getOutputStream();
+		//o.flush();
+		PrintWriter out = new PrintWriter(o, true);
+		out.println(s);
 	}
 
 	/**
@@ -58,8 +60,15 @@ public class BotConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-11
 	 */
-	public String recieve() throws IOException {
-		return in.readUTF();
+	public String recieve() throws IOException{
+		String retval;
+		InputStream is = sock.getInputStream();
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+		while (!br.ready()) {
+		}
+		retval = br.readLine();
+		return retval;
 	}
 
 	/**
@@ -71,9 +80,11 @@ public class BotConnection
 	 * @author  Sean DiGirolamo
 	 * @since   2019-10-16
 	 */
-	public void accept() throws IOException {
-		sock = servSock.accept();
-		out = new DataOutputStream(sock.getOutputStream());
-		in = new DataInputStream(new BufferedInputStream(sock.getInputStream()));
+	public void accept() {
+		try {
+			sock = servSock.accept();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

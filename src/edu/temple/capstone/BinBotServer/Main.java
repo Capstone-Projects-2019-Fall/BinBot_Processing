@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class Main
 {
+	final static int BOT_PORT = 7001;
 	private static AppConnection appConnection = null;
 	private static BotConnection botConnection = null;
 	private static boolean poweredState = true;
@@ -25,7 +26,7 @@ public class Main
 		//appConnection = new AppConnection(7001);
 		//appConnection.accept();
 		System.out.println("Connecting to BinBot Robot...");
-		botConnection = new BotConnection(7002);
+		botConnection = new BotConnection(BOT_PORT);
 		botConnection.accept();
 	}
 
@@ -43,11 +44,15 @@ public class Main
 	}
 
 	public static void loopTest() throws IOException {
-		while(true) {
-			String json = botConnection.recieve();
-			System.out.println(json);
-			Instruction instruction = new Instruction(Status.PATROL, null, null, null);
-			botConnection.sendToBot(instruction.json());
-		}
+		Instruction instruction = new Instruction(Status.PATROL, null, null, null);
+		System.out.println("Attempting to send: " + instruction.json());
+		botConnection.sendToBot(instruction.json());
+		System.out.println("Sent");
+		System.out.println("Attempting to recieve");
+		String json = botConnection.recieve();
+		System.out.print("recieved: ");
+		System.out.println(json);
+
+
 	}
 }

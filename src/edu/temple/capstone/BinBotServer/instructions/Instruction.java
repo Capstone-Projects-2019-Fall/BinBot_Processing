@@ -107,20 +107,24 @@ public class Instruction
 		retval += "\"img\":" + "\"temporary\",";
 
 		retval += "\"treads\":[";
-		for (Pair pair : this.treads) {
-			retval += "{\"angle\":" + pair.getKey() + ",";
-			retval += "\"distance\":" + pair.getValue() + "}";
-			if (pair != this.treads.get(this.treads.size() - 1)) {
-				retval += ",";
+		if (this.treads != null) {
+			for (Pair pair : this.treads) {
+				retval += "{\"angle\":" + pair.getKey() + ",";
+				retval += "\"distance\":" + pair.getValue() + "}";
+				if (pair != this.treads.get(this.treads.size() - 1)) {
+					retval += ",";
+				}
 			}
 		}
 		retval += "],";
 
 		retval += "\"arms\":[";
-		for (Double d : this.arms) {
-			retval += "{\"angle\":" + d + "}";
-			if (d != this.arms.get(this.arms.size() - 1)) {
-				retval += ",";
+		if (this.treads != null) {
+			for (Double d : this.arms) {
+				retval += "{\"angle\":" + d + "}";
+				if (d != this.arms.get(this.arms.size() - 1)) {
+					retval += ",";
+				}
 			}
 		}
 		retval += "]}";
