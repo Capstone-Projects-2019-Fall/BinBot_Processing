@@ -129,6 +129,20 @@ public class Instruction
 	}
 
 	/**
+	 * This method creates a new Instruction object based on the arguments provided. This shouldn't really ever be used
+	 * outside of testing purposes, but it is here just in case.
+	 *
+	 * @author Sean DiGirolamo
+	 * @since 2019-10-23
+	 */
+	public Instruction(Status status, BufferedImage img, List<Pair<Double, Double>> treads, List<Double> arms) {
+		this.status = status;
+		this.img = img;
+		this.treads = treads;
+		this.arms = arms;
+	}
+
+	/**
 	 * This method returns the Buffered img contained within the Instruction
 	 *
 	 * @author Sean DiGirolamo
