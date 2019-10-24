@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -103,34 +102,34 @@ public class Instruction
 	 * @since 2019-10-20
 	 */
 	public String json() {
-		String retval = "{\"status\":\"" + this.status.toString() +"\",";
+		StringBuilder retval = new StringBuilder("{\"status\":\"" + this.status.toString() + "\",");
 
-		retval += "\"img\":" + "\"" + bufferedImageToString(this.img) + "\",";
+		retval.append("\"img\":" + "\"").append(bufferedImageToString(this.img)).append("\",");
 
-		retval += "\"treads\":[";
+		retval.append("\"treads\":[");
 		if (this.treads != null) {
 			for (Pair pair : this.treads) {
-				retval += "{\"angle\":" + pair.getKey() + ",";
-				retval += "\"distance\":" + pair.getValue() + "}";
+				retval.append("{\"angle\":").append(pair.getKey()).append(",");
+				retval.append("\"distance\":").append(pair.getValue()).append("}");
 				if (pair != this.treads.get(this.treads.size() - 1)) {
-					retval += ",";
+					retval.append(",");
 				}
 			}
 		}
-		retval += "],";
+		retval.append("],");
 
-		retval += "\"arms\":[";
+		retval.append("\"arms\":[");
 		if (this.treads != null) {
 			for (Double d : this.arms) {
-				retval += "{\"angle\":" + d + "}";
-				if (d != this.arms.get(this.arms.size() - 1)) {
-					retval += ",";
+				retval.append("{\"angle\":").append(d).append("}");
+				if (!d.equals(this.arms.get(this.arms.size() - 1))) {
+					retval.append(",");
 				}
 			}
 		}
-		retval += "]}";
+		retval.append("]}");
 
-		return retval;
+		return retval.toString();
 	}
 
 	/**
@@ -177,8 +176,7 @@ public class Instruction
 			e.printStackTrace();
 		}
 		byte[] byteArray = out.toByteArray();
-		String retval = Base64.getEncoder().encodeToString(byteArray);
-		return retval;
+		return Base64.getEncoder().encodeToString(byteArray);
 
 	}
 }
