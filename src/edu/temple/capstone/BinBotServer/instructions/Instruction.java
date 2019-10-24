@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -104,7 +105,7 @@ public class Instruction
 	public String json() {
 		String retval = "{\"status\":\"" + this.status.toString() +"\",";
 
-		retval += "\"img\":" + "\"temporary\",";
+		retval += "\"img\":" + "\"" + bufferedImageToString(this.img) + "\",";
 
 		retval += "\"treads\":[";
 		if (this.treads != null) {
@@ -158,8 +159,9 @@ public class Instruction
 
 	private BufferedImage stringToBufferedImage(String s) {
 		BufferedImage retval = null;
+		byte[] bytes = Base64.getDecoder().decode(s);
 		try {
-			retval = ImageIO.read(new ByteArrayInputStream(s.getBytes()));
+			retval = ImageIO.read(new ByteArrayInputStream(bytes));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,7 +176,9 @@ public class Instruction
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Arrays.toString(out.toByteArray());
+		byte[] byteArray = out.toByteArray();
+		String retval = Base64.getEncoder().encodeToString(byteArray);
+		return retval;
 
 	}
 }

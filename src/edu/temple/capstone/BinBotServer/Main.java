@@ -5,7 +5,9 @@ import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class Main
@@ -44,15 +46,23 @@ public class Main
 	}
 
 	public static void loopTest() throws IOException {
-		Instruction instruction = new Instruction(Status.PATROL, null, null, null);
-		System.out.println("Attempting to send: " + instruction.json());
-		botConnection.sendToBot(instruction.json());
+		String path = "C:/Users/Sean/Desktop/Server/";
+		String sendFilename = "img.jpg";
+		String recieveFilename = "out.jpg";
+
+		System.out.println("Reading file " + path + sendFilename);
+		BufferedImage img = ImageIO.read(new File(path + sendFilename));
+		Instruction instrSend = new Instruction(Status.PATROL, img, null, null);
+		System.out.println("Attempting to send: " + instrSend.json());
+		botConnection.sendToBot(instrSend.json());
 		System.out.println("Sent");
+
 		System.out.println("Attempting to recieve");
-		String json = botConnection.recieve();
-		System.out.print("recieved: ");
-		System.out.println(json);
-
-
+		String jsonRecieve = botConnection.recieve();
+		System.out.print("recieved: " + jsonRecieve);
+		System.out.println("Saving image as: " + path + recieveFilename);
+		Instruction instrRecieve = new Instruction(jsonRecieve);
+		ImageIO.write(instrRecieve.img(), "jpg", new File(path + recieveFilename));
+		System.out.println("saved!");
 	}
 }
