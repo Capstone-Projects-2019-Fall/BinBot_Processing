@@ -1,6 +1,5 @@
 package edu.temple.capstone.BinBotServer.connections;
 
-import edu.temple.capstone.BinBotServer.connections.AppConnection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ class AppConnectionTest
 	static void test() throws IOException {
 		appConnection.accept();
 		appConnection.sendToApp(JSON_TEST);
-		String recieved = appConnection.recieve();
+		String recieved = appConnection.receive();
 		assertEquals(JSON_TEST, recieved);
 	}
 }
