@@ -1,17 +1,18 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
 import edu.temple.capstone.BinBotServer.instructions.TreadInstruction;
-import javafx.util.Pair;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
+import java.util.*;
+
 
 class TreadInstructionTest
 {
 	@Test
 	void calcInstructionsTest() {
-		List<Pair<Double, Double>> list = TreadInstruction.calcInstructions(0, 0, 0, 0);
+		List<Map.Entry<Double, Double>> list = TreadInstruction.calcInstructions(0, 0, 0, 0);
 		assertEquals(0.0, list.get(0).getKey());
 		assertEquals(0.0, list.get(0).getValue());
 	}

@@ -1,15 +1,13 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
-import javafx.util.Pair;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
+
 
 /**
  * The Instruction class represents a set of instructions that BinBot should follow in order to retrieve trash. It is
@@ -29,7 +27,7 @@ import java.util.List;
  *     		}
  *     	]
  * }
- * where status is BinBot's operating status, img holds a picture captured by binbot's camera, treads is an array
+ * where status is BinBot's operating status, img holds a picture captured by BinBot's camera, treads is an array
  * containing pairs of angles it should turn and distances it should travel forward after turning,
  * and arms is an array of angles each joint should turn.
  *
@@ -42,7 +40,8 @@ public class Instruction
 {
 	private Status status;
 	private BufferedImage img;
-	private List<Pair<Double, Double>> treads;
+	//	private List<Pair<Double, Double>> treads;
+	private List<Map.Entry<Double, Double>> treads;
 	private List<Double> arms;
 
 	/**
@@ -65,7 +64,8 @@ public class Instruction
 
 		for (Object o : jsonObject.getJSONArray("treads")) {
 			JSONObject jo = (JSONObject)o;
-			treads.add(new Pair<>(jo.getDouble("angle"), jo.getDouble("distance")));
+//			treads.add(new Pair<>(jo.getDouble("angle"), jo.getDouble("distance")));
+			treads.add(new AbstractMap.SimpleEntry<>(jo.getDouble("angle"), jo.getDouble("distance")));
 		}
 
 		this.arms = new ArrayList<>();
@@ -88,7 +88,8 @@ public class Instruction
 		this.status = Status.PATROL;
 		this.img = null;
 		this.treads = new ArrayList<>();
-		this.treads.add(new Pair<>(0.0, 00.0));
+//		this.treads.add(new Pair<>(0.0, 00.0));
+		this.treads.add(new AbstractMap.SimpleEntry<>(0.0, 00.0));
 		this.arms = new ArrayList<>();
 		this.arms = new ArrayList<>();
 		this.arms.add(0.0);
@@ -102,34 +103,34 @@ public class Instruction
 	 * @since 2019-10-20
 	 */
 	public String json() {
-		StringBuilder retval = new StringBuilder("{\"status\":\"" + this.status.toString() + "\",");
+		String retval = "{\"status\":\"" + this.status.toString() +"\",";
 
-		retval.append("\"img\":" + "\"").append(bufferedImageToString(this.img)).append("\",");
+		retval += "\"img\":" + "\"" + bufferedImageToString(img) + "\",";
 
-		retval.append("\"treads\":[");
+		retval += "\"treads\":[";
 		if (this.treads != null) {
-			for (Pair pair : this.treads) {
-				retval.append("{\"angle\":").append(pair.getKey()).append(",");
-				retval.append("\"distance\":").append(pair.getValue()).append("}");
+			for (Map.Entry<Double, Double> pair : this.treads) {
+				retval += "{\"angle\":" + pair.getKey() + ",";
+				retval += "\"distance\":" + pair.getValue() + "}";
 				if (pair != this.treads.get(this.treads.size() - 1)) {
-					retval.append(",");
+					retval += ",";
 				}
 			}
 		}
-		retval.append("],");
+		retval += "],";
 
-		retval.append("\"arms\":[");
-		if (this.treads != null) {
+		retval += "\"arms\":[";
+		if (this.arms != null) {
 			for (Double d : this.arms) {
-				retval.append("{\"angle\":").append(d).append("}");
-				if (!d.equals(this.arms.get(this.arms.size() - 1))) {
-					retval.append(",");
+				retval += "{\"angle\":" + d + "}";
+				if (d != this.arms.get(this.arms.size() - 1)) {
+					retval += ",";
 				}
 			}
 		}
-		retval.append("]}");
+		retval += "]}";
 
-		return retval.toString();
+		return retval;
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class Instruction
 	 * @author Sean DiGirolamo
 	 * @since 2019-10-23
 	 */
-	public Instruction(Status status, BufferedImage img, List<Pair<Double, Double>> treads, List<Double> arms) {
+	public Instruction(Status status, BufferedImage img, List<Map.Entry<Double, Double>> treads, List<Double> arms) {
 		this.status = status;
 		this.img = img;
 		this.treads = treads;
@@ -176,7 +177,8 @@ public class Instruction
 			e.printStackTrace();
 		}
 		byte[] byteArray = out.toByteArray();
-		return Base64.getEncoder().encodeToString(byteArray);
+		String retval = Base64.getEncoder().encodeToString(byteArray);
+		return retval;
 
 	}
 }
