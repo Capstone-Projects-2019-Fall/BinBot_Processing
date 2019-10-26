@@ -10,6 +10,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Original code to test exchanging images between the client and server.
+ *
+ * @author Sean DiGirolamo
+ * @version 1.0
+ * @ince 2019-10-25
+ */
 public class FileExchangeTest {
     final static int BOT_PORT = 7001;
     private static AppConnection appConnection = null;
