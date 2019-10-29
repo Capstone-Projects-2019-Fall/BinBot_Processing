@@ -8,6 +8,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
 
+import edu.temple.capstone.BinBotServer.util.Pair;
+
 
 /**
  * The Instruction class represents a set of instructions that BinBot should follow in order to retrieve trash. It is
@@ -37,8 +39,7 @@ import java.util.*;
 public class Instruction {
     private Status status;
     private BufferedImage img;
-    //	private List<Pair<Double, Double>> treads;
-    private List<Map.Entry<Double, Double>> treads;
+    private List<Pair<Double, Double>> treads;
     private List<Double> arms;
 
     /**
@@ -59,8 +60,7 @@ public class Instruction {
 
         for (Object o : jsonObject.getJSONArray("treads")) {
             JSONObject jo = (JSONObject) o;
-//			treads.add(new Pair<>(jo.getDouble("angle"), jo.getDouble("distance")));
-            treads.add(new AbstractMap.SimpleEntry<>(jo.getDouble("angle"), jo.getDouble("distance")));
+			treads.add(new Pair<>(jo.getDouble("angle"), jo.getDouble("distance")));
         }
 
         this.arms = new ArrayList<>();
@@ -81,8 +81,7 @@ public class Instruction {
         this.status = Status.PATROL;
         this.img = null;
         this.treads = new ArrayList<>();
-//		this.treads.add(new Pair<>(0.0, 00.0));
-        this.treads.add(new AbstractMap.SimpleEntry<>(0.0, 00.0));
+		this.treads.add(new Pair<>(0.0, 00.0));
         this.arms = new ArrayList<>();
         this.arms = new ArrayList<>();
         this.arms.add(0.0);
@@ -96,34 +95,41 @@ public class Instruction {
      * @since 2019-10-20
      */
     public String json() {
-        String retval = "{\"status\":\"" + this.status.toString() + "\",";
+        StringBuilder retval = new StringBuilder("{\"status\":\"")
+            .append(this.status.toString())
+            .append("\",")
+            .append("\"img\":" + "\"")
+            .append(bufferedImageToString(img))
+            .append("\",")
+            .append("\"treads\":[");
 
-        retval += "\"img\":" + "\"" + bufferedImageToString(img) + "\",";
-
-        retval += "\"treads\":[";
         if (this.treads != null) {
-            for (Map.Entry<Double, Double> pair : this.treads) {
-                retval += "{\"angle\":" + pair.getKey() + ",";
-                retval += "\"distance\":" + pair.getValue() + "}";
+            for (Pair<Double, Double> pair : this.treads) {
+                retval.append("{\"angle\":").append(pair.key()).append(",");
+                retval.append("\"distance\":").append(pair.value()).append("}");
                 if (pair != this.treads.get(this.treads.size() - 1)) {
-                    retval += ",";
+                    retval.append(",");
                 }
             }
         }
-        retval += "],";
 
-        retval += "\"arms\":[";
+        retval.append("],")
+            .append("\"arms\":[");
+
         if (this.arms != null) {
             for (Double d : this.arms) {
-                retval += "{\"angle\":" + d + "}";
-                if (d != this.arms.get(this.arms.size() - 1)) {
-                    retval += ",";
+                retval.append("{\"angle\":")
+                    .append(d)
+                    .append("}");
+                if (!d.equals(this.arms.get(this.arms.size() - 1))) {
+                    retval.append(",");
                 }
             }
         }
-        retval += "]}";
 
-        return retval;
+        retval.append("]}");
+
+        return retval.toString();
     }
 
     /**
@@ -133,7 +139,7 @@ public class Instruction {
      * @author Sean DiGirolamo
      * @since 2019-10-23
      */
-    public Instruction(Status status, BufferedImage img, List<Map.Entry<Double, Double>> treads, List<Double> arms) {
+    public Instruction(Status status, BufferedImage img, List<Pair<Double, Double>> treads, List<Double> arms) {
         this.status = status;
         this.img = img;
         this.treads = treads;
@@ -170,8 +176,7 @@ public class Instruction {
             e.printStackTrace();
         }
         byte[] byteArray = out.toByteArray();
-        String retval = Base64.getEncoder().encodeToString(byteArray);
-        return retval;
+        return Base64.getEncoder().encodeToString(byteArray);
 
     }
 }
