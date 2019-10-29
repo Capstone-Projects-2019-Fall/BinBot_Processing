@@ -10,7 +10,7 @@ class InstructionTest
 	private static Instruction jsonInstruction = null;
 	private static Instruction objectInstruction = null;
 
-	private static String json = "{\"status\":\"PATROL\",\"img\":\"temporary\",\"treads\":[{\"angle\":0.0,\"distance\":0.0}],\"arms\":[{\"angle\":0.0}]}";
+	private static String json = "{\"status\":\"PATROL\",\"img\":\"\",\"treads\":[{\"angle\":0.0,\"distance\":0.0}],\"arms\":[{\"angle\":0.0}]}";
 	private static Object[][] o = new Object[1][1];
 
 	@BeforeAll

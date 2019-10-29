@@ -98,9 +98,13 @@ public class Instruction {
         StringBuilder retval = new StringBuilder("{\"status\":\"")
             .append(this.status.toString())
             .append("\",")
-            .append("\"img\":" + "\"")
-            .append(bufferedImageToString(img))
-            .append("\",")
+            .append("\"img\":" + "\"");
+
+        if (this.img != null) {
+            retval.append(bufferedImageToString(img));
+        }
+
+        retval.append("\",")
             .append("\"treads\":[");
 
         if (this.treads != null) {
