@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"edu.temple.capstone.BinBotServer"},{"l":"edu.temple.capstone.BinBotServer.connections"},{"l":"edu.temple.capstone.BinBotServer.instructions"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"edu.temple.capstone.BinBotServer"},{"l":"edu.temple.capstone.BinBotServer.connections"},{"l":"edu.temple.capstone.BinBotServer.instructions"},{"l":"edu.temple.capstone.BinBotServer.mobileInterface"},{"l":"edu.temple.capstone.BinBotServer.util"}]

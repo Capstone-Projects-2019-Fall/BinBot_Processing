@@ -24,7 +24,10 @@ public class ArmInstruction {
      */
     public static List<Double> calcInstructions(double x, double y, double w, double h) {
         List<Double> retval = new ArrayList<>();
-        retval.add(0.0);
+        retval.add(x);
+        retval.add(y);
+        retval.add(w);
+        retval.add(h);
         return retval;
     }
 }

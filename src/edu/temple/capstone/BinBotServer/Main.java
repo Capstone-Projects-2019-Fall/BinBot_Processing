@@ -1,5 +1,7 @@
 package edu.temple.capstone.BinBotServer;
 
+import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
+import edu.temple.capstone.BinBotServer.mobileInterface.AppMessage;
 import edu.temple.capstone.BinBotServer.connections.AppConnection;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
@@ -16,8 +18,8 @@ import java.io.IOException;
  * @since 2019-10-25
  */
 public class Main {
-    final static int BOT_PORT = 7001;
-    final static int APP_PORT = 7002;
+    private final static int BOT_PORT = 7001;
+    private final static int APP_PORT = 7002;
 
     private static AppConnectionThread appConnectionThread;
 

@@ -3,7 +3,6 @@ package edu.temple.capstone.BinBotServer.connections;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 /**
  * The BotConnection class represents the network connection between the BinBot Robot and the BinBot
@@ -39,7 +38,6 @@ public class BotConnection {
      */
     public void sendToBot(String s) throws IOException {
         OutputStream o = sock.getOutputStream();
-        //o.flush();
         PrintWriter out = new PrintWriter(o, true);
         out.println(s);
     }

@@ -1,3 +1,5 @@
 edu.temple.capstone.BinBotServer
 edu.temple.capstone.BinBotServer.connections
 edu.temple.capstone.BinBotServer.instructions
+edu.temple.capstone.BinBotServer.mobileInterface
+edu.temple.capstone.BinBotServer.util

@@ -25,7 +25,8 @@ public class TreadInstruction {
      */
     public static List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
         List<Pair<Double, Double>> retval = new ArrayList<>();
-        retval.add(new Pair<>(0.0, 0.0));
+        retval.add(new Pair<>(x, y));
+        retval.add(new Pair<>(w, h));
         return retval;
     }
 }

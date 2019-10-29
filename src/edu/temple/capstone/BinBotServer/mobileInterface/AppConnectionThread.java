@@ -1,17 +1,15 @@
-package edu.temple.capstone.BinBotServer;
+package edu.temple.capstone.BinBotServer.mobileInterface;
 
 import edu.temple.capstone.BinBotServer.connections.AppConnection;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 public class AppConnectionThread extends Thread
 {
 	private AppConnection appConnection;
 	private Boolean poweredState = true;
 
-	public AppConnectionThread(AppConnection appConnection) throws IOException {
+	public AppConnectionThread(AppConnection appConnection) {
 		super();
 		this.appConnection = appConnection;
 	}

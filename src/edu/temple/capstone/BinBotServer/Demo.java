@@ -15,7 +15,7 @@ import java.io.IOException;
  * @since 2019-10-25
  */
 public class Demo {
-    final static int BOT_PORT = 7001;
+    private final static int BOT_PORT = 7001;
     private static BotConnection botConnection = null;
 
 
@@ -23,14 +23,10 @@ public class Demo {
      * Method to establish connection to BinBot's other components
      *
      * @author Sean DiGirolamo
-     * @version 1.0
      * @since 2019-10-25
      */
     public static void setUp() throws IOException {
         System.out.println("BinBot Server starting...");
-        //System.out.println("Connecting to Mobile Application...");
-        //appConnection = new AppConnection(7001);
-        //appConnection.accept();
         System.out.println("Connecting to BinBot Robot...");
         botConnection = new BotConnection(BOT_PORT);
         botConnection.accept();
@@ -41,10 +37,9 @@ public class Demo {
      * then send a modified BufferedImage, including any bounding boxes, back to the client.
      *
      * @author Sean Reddington
-     * @version 1.0
      * @since 2019-10-25
      */
-    public static void openCVTest() throws IOException {
+    public static void openCVTest() {
         BufferedImage img = receiveCapture();
         WasteDetector wasteDetector = new WasteDetector();
         BufferedImage result = wasteDetector.imageDetect(img);
@@ -55,10 +50,9 @@ public class Demo {
      * Method to send BufferedImage back to connected client.
      *
      * @author Sean Reddington
-     * @version 1.0
      * @since 2019-10-25
      */
-    public static void sendCapture(BufferedImage image) {
+    private static void sendCapture(BufferedImage image) {
         // Send to server
         Instruction imgSend = new Instruction(Status.NAVIGATE, image, null, null);
         System.out.print("Sending image to server..");
@@ -74,10 +68,9 @@ public class Demo {
      * Method to receive BufferedImage from connected client.
      *
      * @author Sean Reddington
-     * @version 1.0
      * @since 2019-10-25
      */
-    public static BufferedImage receiveCapture() {
+    private static BufferedImage receiveCapture() {
         System.out.println("Attempting to receive");
         String jsonReceive = null;
         try {

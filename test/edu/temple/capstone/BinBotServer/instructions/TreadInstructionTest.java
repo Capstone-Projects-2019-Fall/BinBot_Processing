@@ -1,7 +1,5 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
-import edu.temple.capstone.BinBotServer.instructions.TreadInstruction;
-
 import edu.temple.capstone.BinBotServer.util.Pair;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
