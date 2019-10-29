@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PairTest
 {
-	static final double KEY = 0.0;
-	static final double VALUE = 1.1;
+	private static final double KEY = 0.0;
+	private static final double VALUE = 1.1;
 
-	static Pair<Double, Double> pair;
+	private static Pair<Double, Double> pair;
 
 	@BeforeAll
 	static void constructor() {
