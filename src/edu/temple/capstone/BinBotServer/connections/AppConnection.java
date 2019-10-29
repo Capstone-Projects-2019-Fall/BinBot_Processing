@@ -38,7 +38,7 @@ public class AppConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public void sendToApp(String s) throws IOException {
+    public void send(String s) throws IOException {
         out.writeBytes(s);
     }
 
@@ -64,5 +64,15 @@ public class AppConnection {
         sock = servSock.accept();
         out = new DataOutputStream(sock.getOutputStream());
         in = new DataInputStream(new BufferedInputStream(sock.getInputStream()));
+    }
+
+    /**
+     * This method returns true if this object currently has a connection and false otherwise
+     *
+     * @author Sean DiGirolamo
+     * @since 2019-10-29
+     */
+    public boolean connected() {
+        return this.out != null && this.in != null;
     }
 }
