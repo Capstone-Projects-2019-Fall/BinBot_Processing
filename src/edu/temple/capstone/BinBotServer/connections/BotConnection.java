@@ -36,7 +36,7 @@ public class BotConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public void sendToBot(String s) throws IOException {
+    public void send(String s) throws IOException {
         OutputStream o = sock.getOutputStream();
         PrintWriter out = new PrintWriter(o, true);
         out.println(s);
