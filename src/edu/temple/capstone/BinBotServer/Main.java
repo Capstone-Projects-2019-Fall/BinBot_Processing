@@ -80,7 +80,7 @@ public class Main {
                 AppMessage appMessage = new AppMessage(true, img);
                 Instruction response = new Instruction(Status.PATROL, img, null, null);
                 appConnection.send(appMessage.json());
-                botConnection.sendToBot(response.json());
+                botConnection.send(response.json());
             }
         }
     }

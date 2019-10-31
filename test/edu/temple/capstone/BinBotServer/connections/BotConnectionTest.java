@@ -20,7 +20,7 @@ class BotConnectionTest
 	@Test
 	static void test() throws IOException {
 		botConnection.accept();
-		botConnection.sendToBot(JSON_TEST);
+		botConnection.send(JSON_TEST);
 		String recieved = botConnection.receive();
 		assertEquals(JSON_TEST, recieved);
 	}

@@ -57,7 +57,7 @@ public class Demo {
         Instruction imgSend = new Instruction(Status.NAVIGATE, image, null, null);
         System.out.print("Sending image to server..");
         try {
-            botConnection.sendToBot(imgSend.json());
+            botConnection.send(imgSend.json());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -20,7 +20,7 @@ class AppConnectionTest
 	@Test
 	static void test() throws IOException {
 		appConnection.accept();
-		appConnection.sendToApp(JSON_TEST);
+		appConnection.send(JSON_TEST);
 		String recieved = appConnection.receive();
 		assertEquals(JSON_TEST, recieved);
 	}

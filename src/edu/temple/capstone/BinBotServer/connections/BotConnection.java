@@ -37,10 +37,30 @@ public class BotConnection {
      * @since 2019-10-11
      */
     public void send(String s) throws IOException {
-        OutputStream o = sock.getOutputStream();
-        PrintWriter out = new PrintWriter(o, true);
-        out.println(s);
+        this.sendInt(s.length());
+        this.sendString(s);
     }
+
+    private void sendInt(int i) throws IOException {
+    	System.out.println("SENDING " + i);
+    	OutputStream o = sock.getOutputStream();
+    	DataOutputStream out = new DataOutputStream(o);
+    	o.flush();
+    	out.flush();
+    	out.write(i);
+	}
+
+	private void sendACK() throws IOException {
+    	this.sendInt(1);
+	}
+
+    private void sendString(String s) throws IOException {
+    	System.out.println("SENDING " + s);
+    	OutputStream o = sock.getOutputStream();
+    	PrintWriter out = new PrintWriter(o, true);
+    	out.flush();
+    	out.println(s);
+	}
 
     /**
      * This method instructs the server to wait to receive a bit stream from the client. This bit stream will be converted
@@ -57,6 +77,7 @@ public class BotConnection {
         while (!br.ready()) {
         }
         retval = br.readLine();
+        this.sendACK();
         return retval;
     }
 
