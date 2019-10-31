@@ -1,4 +1,4 @@
-package edu.temple.capstone.BinBotServer.mobileInterface;
+package edu.temple.cis.capstone;
 
 import org.json.JSONObject;
 
@@ -13,7 +13,9 @@ import java.util.Base64;
  * the Server to stop operation and for sending images to display to the app. It is sent as a json string in the format
  * {
  *     "poweredState":<Boolean>,
- *     "img":<String>
+ *     "img":<String>,
+ *     "height":<int>,
+ *     "width":<int>
  * }
  * where poweredState is true when the system should continue operation and the img is a BufferedImage converted into
  * a string which will be displayed in the mobile application.
@@ -25,6 +27,8 @@ public class AppMessage
 {
 	private Boolean poweredState;
 	private BufferedImage img = null;
+	private int height;
+	private int width;
 
 	/**
 	 * This constructor takes as input a json string. It assumes that the json is properly formatted in the proper
@@ -41,6 +45,8 @@ public class AppMessage
 		if (imgString != null) {
 			this.img = this.stringToBufferedImage(imgString);
 		}
+		this.height = jsonObject.getInt("height");
+		this.width = jsonObject.getInt("width");
 	}
 
 	/**
@@ -52,6 +58,8 @@ public class AppMessage
 	public AppMessage(Boolean poweredState, BufferedImage img) {
 		this.poweredState = poweredState;
 		this.img = img;
+		this.height = img.getHeight();
+		this.width = img.getWidth();
 	}
 
 	/**
@@ -70,7 +78,9 @@ public class AppMessage
 			retval.append(bufferedImageToString(img));
 		}
 
-		retval.append("}");
+		retval.append("\",")
+			.append("\"height\":").append(this.height).append(",")
+			.append("\"width\":").append(this.width).append("}");
 
 		return retval.toString();
 	}
