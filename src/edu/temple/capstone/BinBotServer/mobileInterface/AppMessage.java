@@ -1,4 +1,4 @@
-package edu.temple.cis.capstone;
+package edu.temple.capstone.BinBotServer.mobileInterface;
 
 import org.json.JSONObject;
 

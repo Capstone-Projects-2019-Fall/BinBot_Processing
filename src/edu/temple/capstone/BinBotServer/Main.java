@@ -1,14 +1,17 @@
 package edu.temple.capstone.BinBotServer;
 
 import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
-import edu.temple.capstone.BinBotServer.mobileInterface.AppMessage;
 import edu.temple.capstone.BinBotServer.connections.AppConnection;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
+import edu.temple.capstone.BinBotServer.util.Pair;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main class to run the BinBot processing server.
@@ -33,7 +36,6 @@ public class Main {
      * @since 2019-10-25
      */
     public static void main(String[] args) throws IOException {
-        //Demo 1
         setup();
         loop();
     }
@@ -77,9 +79,9 @@ public class Main {
                 String json = botConnection.receive();
                 Instruction instruction = new Instruction(json);
                 BufferedImage img = wasteDetector.imageDetect(instruction.img());
-                AppMessage appMessage = new AppMessage(true, img);
-                Instruction response = new Instruction(Status.PATROL, img, null, null);
-                appConnection.send(appMessage.json());
+                List<Pair<Double, Double>> treads = new ArrayList<>();
+                treads.add(new Pair<>(90.0, 0.5));
+                Instruction response = new Instruction(Status.PATROL, null, treads, null);
                 botConnection.send(response.json());
             }
         }
