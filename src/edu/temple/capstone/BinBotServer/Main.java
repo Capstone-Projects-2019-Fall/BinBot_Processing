@@ -1,15 +1,12 @@
 package edu.temple.capstone.BinBotServer;
 
 import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
-import edu.temple.capstone.BinBotServer.connections.AppConnection;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
 import edu.temple.capstone.BinBotServer.util.Pair;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +23,6 @@ public class Main {
 
     private static AppConnectionThread appConnectionThread;
 
-    private static AppConnection appConnection = null;
     private static BotConnection botConnection = null;
 
     /**
@@ -49,11 +45,7 @@ public class Main {
     public static void setup() {
         System.out.println("BinBot server starting...");
         try {
-            appConnection = new AppConnection(APP_PORT);
-            System.out.println("Connecting to App...");
-            appConnection.accept();
-            System.out.println("Connected to App");
-            appConnectionThread = new AppConnectionThread(appConnection);
+            appConnectionThread = new AppConnectionThread(APP_PORT);
             appConnectionThread.start();
             System.out.println("AppConnectionThread started");
 
@@ -61,6 +53,7 @@ public class Main {
             botConnection = new BotConnection(BOT_PORT);
             botConnection.accept();
             System.out.println("Connected to Bot");
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,12 +66,12 @@ public class Main {
      * @since 2019-10-29
      */
     public static void loop() throws IOException {
-        WasteDetector wasteDetector = new WasteDetector();
+        //WasteDetector wasteDetector = new WasteDetector();
         while (true) {
             while (appConnectionThread.poweredState()) {
                 String json = botConnection.receive();
-                Instruction instruction = new Instruction(json);
-                BufferedImage img = wasteDetector.imageDetect(instruction.img());
+                //Instruction instruction = new Instruction(json);
+                //BufferedImage img = wasteDetector.imageDetect(instruction.img());
                 List<Pair<Double, Double>> treads = new ArrayList<>();
                 treads.add(new Pair<>(90.0, 0.5));
                 Instruction response = new Instruction(Status.PATROL, null, treads, null);
