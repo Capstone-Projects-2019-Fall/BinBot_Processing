@@ -38,15 +38,12 @@ public class BotConnection {
      * @since 2019-10-11
      */
     public void send(String s) throws IOException {
-    	System.out.println("SENDING " + s);
         this.sendLength(s);
         this.stuffString(s);
         this.waitACK();
-        System.out.println();
     }
 
     private void sendLength(String s) throws  IOException {
-    	System.out.println("Sending Length: " + s.length());
     	this.stuffInt(s.length());
     	this.waitACK();
 	}
@@ -54,46 +51,33 @@ public class BotConnection {
 	private void sendACK() throws IOException {
 		byte[] b = new byte[1];
 		b[0] = 1;
-		System.out.println("Sending ACK: " + b[0]);
 		this.stuffBytes(b);
 	}
 
 	private void stuffString(String s) throws IOException {
-		System.out.println("SENDING " + s);
 		OutputStream o = sock.getOutputStream();
 		PrintWriter out = new PrintWriter(o, true);
-
 		o.flush();
 		out.flush();
-
 		out.println(s);
-
 		o.flush();
 		out.flush();
 	}
 
     private void stuffInt(int i) throws IOException {
-    	System.out.println("SENDING " + i);
     	OutputStream o = sock.getOutputStream();
     	DataOutputStream out = new DataOutputStream(o);
-
     	o.flush();
     	out.flush();
-
     	out.write(i);
-
 		o.flush();
 		out.flush();
 	}
 
 	private void stuffBytes(byte[] b) throws IOException {
-    	System.out.println("SENDING " + b[0]);
     	OutputStream o = sock.getOutputStream();
-
     	o.flush();
-
     	o.write(b);
-
     	o.flush();
 	}
 
@@ -105,12 +89,8 @@ public class BotConnection {
      * @since 2019-10-11
      */
     public String receive() throws IOException {
-    	System.out.println("RECEIVING");
 		String retval = pull();
-
-        System.out.println("RECEIVED: " + retval);
         this.sendACK();
-        System.out.println();
         return retval;
     }
 
@@ -119,18 +99,14 @@ public class BotConnection {
 		InputStream is = sock.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
-
 		while (!br.ready()) {
 		}
-
 		retval = br.readLine();
 		return retval;
 	}
 
 	private void waitACK() throws IOException {
-    	System.out.println("Waiting for ACK");
-    	byte retval = this.pull().getBytes()[0];
-    	System.out.println("Received ACK: " + retval);
+    	this.pull();
 	}
 
     /**
