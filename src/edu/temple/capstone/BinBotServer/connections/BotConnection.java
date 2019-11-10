@@ -26,9 +26,13 @@ public class BotConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-16
      */
-    public BotConnection(int port) throws IOException {
-        servSock = new ServerSocket(port);
-    }
+    public BotConnection(int port) {
+		try {
+			servSock = new ServerSocket(port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
     /**
      * This method takes as input a string which will be sent over the socket to whatever client is connected to
@@ -37,10 +41,14 @@ public class BotConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public void send(String s) throws IOException {
-        this.sendLength(s);
-        this.stuffString(s);
-        this.waitACK();
+    public void send(String s) {
+		try {
+			this.sendLength(s);
+			this.stuffString(s);
+			this.waitACK();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     private void sendLength(String s) throws  IOException {
@@ -88,9 +96,16 @@ public class BotConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public String receive() throws IOException {
-		String retval = pull();
-        this.sendACK();
+    public String receive() {
+		String retval = null;
+		try {
+			retval = pull();
+			this.sendACK();
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		}
+
         return retval;
     }
 
@@ -123,4 +138,18 @@ public class BotConnection {
             e.printStackTrace();
         }
     }
+
+	/**
+	 * This method closes the connection, but still allows the server to get more connections with accept.
+	 *
+	 * @author Sean DiGirolamo
+	 * @since 2019-11-10
+	 */
+	public void close() {
+		try {
+			this.sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

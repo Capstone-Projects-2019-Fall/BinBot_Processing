@@ -58,8 +58,13 @@ public class AppMessage
 	public AppMessage(Boolean poweredState, BufferedImage img) {
 		this.poweredState = poweredState;
 		this.img = img;
-		this.height = img.getHeight();
-		this.width = img.getWidth();
+		if (img != null) {
+			this.height = img.getHeight();
+			this.width = img.getWidth();
+		} else {
+			this.height = -1;
+			this.width = -1;
+		}
 	}
 
 	/**

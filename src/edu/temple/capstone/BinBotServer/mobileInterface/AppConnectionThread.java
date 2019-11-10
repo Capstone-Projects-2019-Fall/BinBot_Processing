@@ -17,37 +17,19 @@ public class AppConnectionThread extends Thread
 
 	@Override
 	public void run() {
-		this.setup();
+		appConnection = new AppConnection(port);
 		while (true) {
-			try {
-				this.loop();
-			} catch (IOException e) {
-				this.setup();
-			}
-		}
-	}
-
-	public void setup() {
-		System.out.println("Connecting to App...");
-		try {
-			appConnection = new AppConnection(port);
+			System.out.println("Connecting to App...");
 			appConnection.accept();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Connected to App");
-	}
+			System.out.println("Connected to App");
 
-	private void loop() throws IOException {
-		while (true) {
 			String msgString = this.appConnection.receive();
 			AppMessage appMessage = new AppMessage(msgString);
+			System.out.println("From app: " + appMessage.json());
 			this.poweredState = appMessage.poweredState();
-		}
-	}
 
-	public AppConnection appConnection() {
-		return this.appConnection;
+			this.appConnection.close();
+		}
 	}
 
 	public Boolean poweredState() {

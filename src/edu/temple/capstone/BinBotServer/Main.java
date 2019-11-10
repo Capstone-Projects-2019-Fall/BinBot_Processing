@@ -44,19 +44,12 @@ public class Main {
      */
     public static void setup() {
         System.out.println("BinBot server starting...");
-        try {
-            appConnectionThread = new AppConnectionThread(APP_PORT);
-            appConnectionThread.start();
-            System.out.println("AppConnectionThread started");
 
-            System.out.println("Connecting to bot");
-            botConnection = new BotConnection(BOT_PORT);
-            botConnection.accept();
-            System.out.println("Connected to Bot");
-            System.out.println();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		appConnectionThread = new AppConnectionThread(APP_PORT);
+		appConnectionThread.start();
+		System.out.println("AppConnectionThread started");
+
+		botConnection = new BotConnection(BOT_PORT);
     }
 
     /**
@@ -69,13 +62,24 @@ public class Main {
         //WasteDetector wasteDetector = new WasteDetector();
         while (true) {
             while (appConnectionThread.poweredState()) {
+
+				System.out.println("Connecting to bot");
+            	botConnection.accept();
+				System.out.println("Connected to Bot");
+				System.out.println();
+
                 String json = botConnection.receive();
+
                 //Instruction instruction = new Instruction(json);
                 //BufferedImage img = wasteDetector.imageDetect(instruction.img());
                 List<Pair<Double, Double>> treads = new ArrayList<>();
                 treads.add(new Pair<>(90.0, 0.5));
+
                 Instruction response = new Instruction(Status.PATROL, null, treads, null);
+
                 botConnection.send(response.json());
+
+                botConnection.close();
             }
         }
     }

@@ -16,8 +16,6 @@ import java.net.Socket;
 public class AppConnection {
     private ServerSocket servSock;
     private Socket sock = null;
-    private DataOutputStream out = null;
-    private DataInputStream in = null;
 
     /**
      * This constructor creates an AppConnection object which can be used for initiating and communicating with
@@ -27,8 +25,12 @@ public class AppConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public AppConnection(int port) throws IOException {
-        servSock = new ServerSocket(port);
+    public AppConnection(int port) {
+        try {
+            servSock = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -38,8 +40,22 @@ public class AppConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public void send(String s) throws IOException {
-        out.writeBytes(s);
+    public void send(String s) {
+        try {
+            this.stuffString(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stuffString(String s) throws IOException {
+        OutputStream o = sock.getOutputStream();
+        PrintWriter out = new PrintWriter(o, true);
+        o.flush();
+        out.flush();
+        out.println(s);
+        o.flush();
+        out.flush();
     }
 
     /**
@@ -49,8 +65,26 @@ public class AppConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-11
      */
-    public String receive() throws IOException {
-        return in.readUTF();
+    public String receive() {
+        String retval = null;
+        try {
+            retval = this.pull();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return retval;
+    }
+
+    private String pull() throws IOException {
+        String retval;
+        InputStream is = sock.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        while (!br.ready()) {
+        }
+        retval = br.readLine();
+        return retval;
     }
 
     /**
@@ -60,19 +94,25 @@ public class AppConnection {
      * @author Sean DiGirolamo
      * @since 2019-10-14
      */
-    public void accept() throws IOException {
-        sock = servSock.accept();
-        out = new DataOutputStream(sock.getOutputStream());
-        in = new DataInputStream(new BufferedInputStream(sock.getInputStream()));
+    public void accept() {
+        try {
+            sock = servSock.accept();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * This method returns true if this object currently has a connection and false otherwise
+     * This method closes the connection, but still allows the server to get more connections with accept.
      *
      * @author Sean DiGirolamo
-     * @since 2019-10-29
+     * @since 2019-11-10
      */
-    public boolean connected() {
-        return this.out != null && this.in != null;
+    public void close() {
+        try {
+            this.sock.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

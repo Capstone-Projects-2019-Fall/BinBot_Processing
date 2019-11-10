@@ -56,11 +56,7 @@ public class Demo {
         // Send to server
         Instruction imgSend = new Instruction(Status.NAVIGATE, image, null, null);
         System.out.print("Sending image to server..");
-        try {
-            botConnection.send(imgSend.json());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        botConnection.send(imgSend.json());
         System.out.println("Sent");
     }
 
@@ -73,11 +69,7 @@ public class Demo {
     private static BufferedImage receiveCapture() {
         System.out.println("Attempting to receive");
         String jsonReceive = null;
-        try {
-            jsonReceive = botConnection.receive();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        jsonReceive = botConnection.receive();
         System.out.println("received image from server");
         Instruction imgReceive = new Instruction(jsonReceive);
         return imgReceive.img();
