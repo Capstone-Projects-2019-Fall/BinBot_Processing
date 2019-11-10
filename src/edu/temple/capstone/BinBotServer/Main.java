@@ -61,6 +61,7 @@ public class Main {
     public static void loop() throws IOException {
         //WasteDetector wasteDetector = new WasteDetector();
         while (true) {
+        	System.out.println(appConnectionThread.poweredState());
             while (appConnectionThread.poweredState()) {
 
 				System.out.println("Connecting to bot");
@@ -78,7 +79,6 @@ public class Main {
                 Instruction response = new Instruction(Status.PATROL, null, treads, null);
 
                 botConnection.send(response.json());
-
                 botConnection.close();
             }
         }

@@ -45,7 +45,7 @@ public class BotConnection {
 		try {
 			this.sendLength(s);
 			this.stuffString(s);
-			this.waitACK();
+			//this.waitACK();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +53,7 @@ public class BotConnection {
 
     private void sendLength(String s) throws  IOException {
     	this.stuffInt(s.length());
-    	this.waitACK();
+    	//this.waitACK();
 	}
 
 	private void sendACK() throws IOException {
