@@ -1,5 +1,6 @@
 package edu.temple.capstone.BinBotServer;
 
+import edu.temple.capstone.BinBotServer.instructions.TreadInstruction;
 import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
@@ -24,6 +25,10 @@ public class Main {
     private static AppConnectionThread appConnectionThread;
 
     private static BotConnection botConnection = null;
+
+    private static PatrolSequence patrolSequence = new PatrolSequence();
+
+    private static WasteDetector wasteDetector = new WasteDetector();
 
     /**
      * Main method to instantiate and loop through the BinBot server application.
@@ -59,28 +64,55 @@ public class Main {
      * @since 2019-10-29
      */
     public static void loop() throws IOException {
-        //WasteDetector wasteDetector = new WasteDetector();
         while (true) {
         	System.out.println(appConnectionThread.poweredState());
             while (appConnectionThread.poweredState()) {
-
-				System.out.println("Connecting to bot");
             	botConnection.accept();
-				System.out.println("Connected to Bot");
-				System.out.println();
 
                 String json = botConnection.receive();
 
-                //Instruction instruction = new Instruction(json);
-                //BufferedImage img = wasteDetector.imageDetect(instruction.img());
-                List<Pair<Double, Double>> treads = new ArrayList<>();
-                treads.add(new Pair<>(90.0, 0.5));
-
-                Instruction response = new Instruction(Status.PATROL, null, treads, null);
+                Instruction fromBot = new Instruction(json);
+                Instruction response = generateInstruction(fromBot);
 
                 botConnection.send(response.json());
                 botConnection.close();
+                System.out.println("Sent a message to BinBot");
             }
         }
     }
+
+    public static Instruction generateInstruction(Instruction prev) {
+    	Instruction retval = null;
+    	Status status = null;
+    	Pair<Double, Double> movement = null;
+
+    	switch (prev.status()) {
+		case PATROL:
+			wasteDetector.loadImage(prev.img());
+			if (wasteDetector.containsWaste()) {
+				status = Status.ANGLE;
+				movement = TreadInstruction.calcInstructions(wasteDetector.x(), wasteDetector.y(), wasteDetector.w(), wasteDetector.h());
+				patrolSequence.reset();
+			} else {
+				status = Status.PATROL;
+				movement = patrolSequence.next();
+			}
+			break;
+		case ANGLE:
+			movement = TreadInstruction.calcInstructions(wasteDetector.x(), wasteDetector.y(), wasteDetector.w(), wasteDetector.h());
+			if (movement.key() == 0.0) {
+				status = Status.RETRIEVE;
+			} else {
+				status = Status.ANGLE;
+			}
+			break;
+		default:
+			break;
+		}
+
+		List<Pair<Double, Double>> treads = new ArrayList<>();
+    	treads.add(movement);
+
+		return new Instruction(status, null, treads, null);
+	}
 }

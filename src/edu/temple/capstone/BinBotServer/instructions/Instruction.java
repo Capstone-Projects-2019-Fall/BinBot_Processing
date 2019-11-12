@@ -183,4 +183,14 @@ public class Instruction {
         return Base64.getEncoder().encodeToString(byteArray);
 
     }
+
+    /**
+     * This method returns this status contained in the Instruction.
+     *
+     * @author Sean DiGirolamo
+     * @since 2019-11-13
+     */
+    public Status status() {
+        return this.status;
+    }
 }
