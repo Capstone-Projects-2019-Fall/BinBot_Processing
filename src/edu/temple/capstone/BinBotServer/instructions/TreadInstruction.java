@@ -1,7 +1,5 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
-import edu.temple.capstone.BinBotServer.util.Pair;
-
 import java.util.*;
 
 /**
@@ -23,10 +21,10 @@ public class TreadInstruction {
      * @author Sean DiGirolamo
      * @since 2019-10-09
      */
-    public static List<Pair<Double, Double>> calcInstructions(double x, double y, double w, double h) {
-        List<Pair<Double, Double>> retval = new ArrayList<>();
-        retval.add(new Pair<>(x, y));
-        retval.add(new Pair<>(w, h));
+    public static List<Movement> calcInstructions(double x, double y, double w, double h) {
+        List<Movement> retval = new ArrayList<>();
+        retval.add(new Movement(x, y));
+        retval.add(new Movement(w, h));
         return retval;
     }
 }

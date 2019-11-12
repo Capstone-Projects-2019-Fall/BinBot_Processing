@@ -8,8 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
 
-import edu.temple.capstone.BinBotServer.util.Pair;
-
 
 /**
  * The Instruction class represents a set of instructions that BinBot should follow in order to retrieve trash. It is
@@ -39,7 +37,7 @@ import edu.temple.capstone.BinBotServer.util.Pair;
 public class Instruction {
     private Status status;
     private BufferedImage img;
-    private List<Pair<Double, Double>> treads;
+    private List<Movement> treads;
     private List<Double> arms;
 
     /**
@@ -60,7 +58,7 @@ public class Instruction {
 
         for (Object o : jsonObject.getJSONArray("treads")) {
             JSONObject jo = (JSONObject) o;
-			treads.add(new Pair<>(jo.getDouble("angle"), jo.getDouble("distance")));
+			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
         }
 
         this.arms = new ArrayList<>();
@@ -81,7 +79,7 @@ public class Instruction {
         this.status = Status.PATROL;
         this.img = null;
         this.treads = new ArrayList<>();
-		this.treads.add(new Pair<>(0.0, 00.0));
+		this.treads.add(new Movement(0.0, 00.0));
         this.arms = new ArrayList<>();
         this.arms = new ArrayList<>();
         this.arms.add(0.0);
@@ -108,10 +106,10 @@ public class Instruction {
             .append("\"treads\":[");
 
         if (this.treads != null) {
-            for (Pair<Double, Double> pair : this.treads) {
-                retval.append("{\"angle\":").append(pair.key()).append(",");
-                retval.append("\"distance\":").append(pair.value()).append("}");
-                if (pair != this.treads.get(this.treads.size() - 1)) {
+            for (Movement movement : this.treads) {
+                retval.append("{\"angle\":").append(movement.angle()).append(",");
+                retval.append("\"distance\":").append(movement.distance()).append("}");
+                if (movement != this.treads.get(this.treads.size() - 1)) {
                     retval.append(",");
                 }
             }
@@ -143,7 +141,7 @@ public class Instruction {
      * @author Sean DiGirolamo
      * @since 2019-10-23
      */
-    public Instruction(Status status, BufferedImage img, List<Pair<Double, Double>> treads, List<Double> arms) {
+    public Instruction(Status status, BufferedImage img, List<Movement> treads, List<Double> arms) {
         this.status = status;
         this.img = img;
         this.treads = treads;

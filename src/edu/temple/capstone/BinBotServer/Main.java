@@ -5,7 +5,7 @@ import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
-import edu.temple.capstone.BinBotServer.util.Pair;
+import edu.temple.capstone.BinBotServer.instructions.Movement;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class Main {
     public static Instruction generateInstruction(Instruction prev) {
     	Instruction retval = null;
     	Status status = null;
-    	Pair<Double, Double> movement = null;
+    	Movement movement = null;
 
     	switch (prev.status()) {
 		case PATROL:
@@ -100,7 +100,7 @@ public class Main {
 			break;
 		case ANGLE:
 			movement = TreadInstruction.calcInstructions(wasteDetector.x(), wasteDetector.y(), wasteDetector.w(), wasteDetector.h());
-			if (movement.key() == 0.0) {
+			if (movement.angle() == 0.0) {
 				status = Status.RETRIEVE;
 			} else {
 				status = Status.ANGLE;
@@ -110,7 +110,7 @@ public class Main {
 			break;
 		}
 
-		List<Pair<Double, Double>> treads = new ArrayList<>();
+		List<Movement> treads = new ArrayList<>();
     	treads.add(movement);
 
 		return new Instruction(status, null, treads, null);

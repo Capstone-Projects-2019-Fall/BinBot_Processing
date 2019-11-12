@@ -54,7 +54,7 @@ public class Demo {
      */
     private static void sendCapture(BufferedImage image) {
         // Send to server
-        Instruction imgSend = new Instruction(Status.NAVIGATE, image, null, null);
+        Instruction imgSend = new Instruction(Status.PATROL, image, null, null);
         System.out.print("Sending image to server..");
         botConnection.send(imgSend.json());
         System.out.println("Sent");

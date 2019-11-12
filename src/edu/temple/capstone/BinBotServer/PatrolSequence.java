@@ -1,6 +1,6 @@
 package edu.temple.capstone.BinBotServer;
 
-import edu.temple.capstone.BinBotServer.util.Pair;
+import edu.temple.capstone.BinBotServer.instructions.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class PatrolSequence
 {
-	private List<Pair<Double, Double>> seq = new ArrayList<>();
+	private List<Movement> seq = new ArrayList<>();
 	private int selection = 0;
 
 	/**
@@ -83,7 +83,7 @@ public class PatrolSequence
 	}
 
 	private void add(Double a, Double d) {
-		seq.add(new Pair<>(a, d));
+		seq.add(new Movement(a, d));
 	}
 
 	/**
@@ -93,8 +93,8 @@ public class PatrolSequence
 	 * @author Sean DiGirolamo
 	 * @since 2019-11-12
 	 */
-	public Pair<Double, Double> next() {
-		Pair<Double, Double> retval = this.seq.get(this.selection);
+	public Movement next() {
+		Movement retval = this.seq.get(this.selection);
 		this.selection++;
 		if (this.selection >= this.seq.size()) {
 			this.selection = 0;

@@ -1,5 +1,6 @@
 package edu.temple.capstone.BinBotServer.util;
 
+import edu.temple.capstone.BinBotServer.instructions.Movement;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -10,20 +11,20 @@ class PairTest
 	private static final double KEY = 0.0;
 	private static final double VALUE = 1.1;
 
-	private static Pair<Double, Double> pair;
+	private static Movement<Double, Double> movement;
 
 	@BeforeAll
 	static void constructor() {
-		pair = new Pair<>(KEY, VALUE);
+		movement = new Movement<>(KEY, VALUE);
 	}
 
 	@Test
 	void key() {
-		assertEquals(KEY, pair.key());
+		assertEquals(KEY, movement.angle());
 	}
 
 	@Test
 	void value() {
-		assertEquals(VALUE, pair.value());
+		assertEquals(VALUE, movement.distance());
 	}
 }
