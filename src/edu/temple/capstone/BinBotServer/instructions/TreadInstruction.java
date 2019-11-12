@@ -21,10 +21,21 @@ public class TreadInstruction {
      * @author Sean DiGirolamo
      * @since 2019-10-09
      */
-    public static List<Movement> calcInstructions(double x, double y, double w, double h) {
+    public static List<Movement> calcInstructions(double x, double y, double w, double h, double imgW, double imgH) {
+        // I calculated the angle it sees at, 52, based on sees 1 ft wide at 1ft distance
         List<Movement> retval = new ArrayList<>();
-        retval.add(new Movement(x, y));
-        retval.add(new Movement(w, h));
+        double angle = -1.0;
+
+        double imgHalfPoint = (imgW + imgH) / 2;
+
+        if (imgHalfPoint > x && imgHalfPoint < y) {
+            angle = 0.0;
+        } else {
+            angle = (x / 100) * 52;
+        }
+
+        retval.add(new Movement(angle, 1.0));
+
         return retval;
     }
 }
