@@ -31,7 +31,21 @@ public class TreadInstruction {
         if (imgHalfPoint > x && imgHalfPoint < y) {
             angle = 0.0;
         } else {
-            angle = (x / 100) * 52;
+        	// Further from item, more impactful angle will be in determining distance from center
+			// Assume closest length, which has most accurate angle, so that we will not overturn, but will likely underturn
+			// multiple times until at correct distance
+			// Turn same percentage of 52 degrees as percentage distance from center
+			double diff = imgHalfPoint - x;
+			double percent;
+			boolean left;
+			if (diff > 0) {
+				left = true;
+			} else {
+				diff = -diff;
+				left = false;
+			}
+			percent = diff / imgHalfPoint;
+            angle = percent * 52;
         }
 
         retval.add(new Movement(angle, 1.0));
