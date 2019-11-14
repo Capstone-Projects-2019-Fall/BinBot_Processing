@@ -6,7 +6,11 @@ import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
 import edu.temple.capstone.BinBotServer.instructions.Movement;
+import edu.temple.capstone.BinBotServer.mobileInterface.AppMessage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,9 @@ public class Main {
      * @since 2019-10-25
      */
     public static void main(String[] args) throws IOException {
+    	BufferedImage img = ImageIO.read(new File("C:/Users/Sean/Desktop/longcat.jpg"));
+		AppMessage a = new AppMessage(true, img);
+		System.out.println(a.json());
         setup();
         loop();
     }
@@ -61,8 +68,8 @@ public class Main {
      * Loop that is repeated during execution of the BinBot server application.
      *
      * @author Sean Reddington, Sean DiGirolamo
-     * @since 2019-10-29
-     */
+     * @since 2019-10-2
+	 */
     public static void loop() throws IOException {
         while (true) {
         	System.out.println(appConnectionThread.poweredState());
@@ -91,7 +98,7 @@ public class Main {
 			wasteDetector.loadImage(prev.img());
 			if (wasteDetector.containsWaste()) {
 				status = Status.ANGLE;
-				movement = TreadInstruction.calcInstructions(wasteDetector.x(), wasteDetector.y(), wasteDetector.w(), wasteDetector.h());
+				movement = TreadInstruction.calcInstructions(wasteDetector.objX(), wasteDetector.objY(), wasteDetector.objWidth(), wasteDetector.objHeight(), wasteDetector.imgWidth(), wasteDetector.imgHeight()).get(0);
 				patrolSequence.reset();
 			} else {
 				status = Status.PATROL;
@@ -99,7 +106,7 @@ public class Main {
 			}
 			break;
 		case ANGLE:
-			movement = TreadInstruction.calcInstructions(wasteDetector.x(), wasteDetector.y(), wasteDetector.w(), wasteDetector.h());
+			movement = TreadInstruction.calcInstructions(wasteDetector.objX(), wasteDetector.objY(), wasteDetector.objWidth(), wasteDetector.objHeight(), wasteDetector.imgWidth(), wasteDetector.imgHeight()).get(0);
 			if (movement.angle() == 0.0) {
 				status = Status.RETRIEVE;
 			} else {

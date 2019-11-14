@@ -10,7 +10,7 @@ class TreadInstructionTest
 {
 	@Test
 	void calcInstructionsTest() {
-		List<Movement<Double, Double>> list = TreadInstruction.calcInstructions(0, 0, 0, 0);
+		List<Movement> list = TreadInstruction.calcInstructions(0, 0, 0, 0, 0, 0);
 		assertEquals(0.0, list.get(0).angle());
 		assertEquals(0.0, list.get(0).distance());
 	}

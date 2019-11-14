@@ -11,11 +11,11 @@ class PairTest
 	private static final double KEY = 0.0;
 	private static final double VALUE = 1.1;
 
-	private static Movement<Double, Double> movement;
+	private static Movement movement;
 
 	@BeforeAll
 	static void constructor() {
-		movement = new Movement<>(KEY, VALUE);
+		movement = new Movement(KEY, VALUE);
 	}
 
 	@Test
