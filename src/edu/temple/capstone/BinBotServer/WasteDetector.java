@@ -3,6 +3,7 @@ package edu.temple.capstone.BinBotServer;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import org.tensorflow.SavedModelBundle;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -19,10 +20,22 @@ class WasteDetector {
 
     private Mat mat;
     private BufferedImage bufferedImage;
+    private SavedModelBundle model;
 
     // Loading the OpenCV core library
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
+
+    /**
+     * Default constructor.  Loads the prediction model.
+     *
+     * @author Michael Savitski
+     * @since 2019-11-16
+     */
+    public WasteDetector() {
+        String modelPath = "res/faster_rcnn_inception_v2_coco_2018_01_28/saved_model";
+        model = SavedModelBundle.load(modelPath, "serve");
     }
 
     /**
