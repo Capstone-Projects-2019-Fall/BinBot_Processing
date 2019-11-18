@@ -54,6 +54,7 @@ public class Instruction {
 
         this.treads = new ArrayList<>();
 
+        imageTestingStuff(jsonObject.getString("img"));
         this.img = this.stringToBufferedImage(jsonObject.getString("img"));
 
         for (Object o : jsonObject.getJSONArray("treads")) {
@@ -180,6 +181,10 @@ public class Instruction {
         byte[] byteArray = out.toByteArray();
         return Base64.getEncoder().encodeToString(byteArray);
 
+    }
+
+    private void imageTestingStuff(String img) {
+        System.out.println(img.length());
     }
 
     /**
