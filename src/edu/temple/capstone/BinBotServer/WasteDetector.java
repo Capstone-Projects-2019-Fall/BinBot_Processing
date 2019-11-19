@@ -29,6 +29,7 @@ class WasteDetector {
     private BufferedImage bufferedImage;
     private SavedModelBundle model;
     private ArrayList<Prediction> predictions;
+    private long startTime, endTime, mostRecentLatency;
 
     //This value can be adjusted, currently only showing boxes with 70% or more prediction score
     final private float minimumScore = .70f;
@@ -59,7 +60,10 @@ class WasteDetector {
      */
     BufferedImage imageDetect(BufferedImage img) {
         this.bufferedImage = img;
+        startTime = System.currentTimeMillis();
         bufferedImg2Mat();
+        endTime = System.currentTimeMillis();
+        mostRecentLatency = endTime - startTime;
         return this.getImage(this.mat);
     }
 
@@ -269,5 +273,13 @@ class WasteDetector {
 
     public ArrayList<Prediction> getPredictions() {
         return predictions;
+    }
+
+    public long getMostRecentLatency() {
+        return mostRecentLatency;
+    }
+
+    public void setMostRecentLatency(long mostRecentLatency) {
+        this.mostRecentLatency = mostRecentLatency;
     }
 }

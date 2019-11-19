@@ -33,6 +33,7 @@ public class Demo {
         ImageIO.write(testImage, "jpg", outputFile);
 
         if (predictions.size() > 0) {
+            System.out.println("Prediction latency = " + detector.getMostRecentLatency() + "milliseconds.");
             System.out.println("Parent image width = " + predictions.get(0).getParentImageWidth() +
                     ", Parent image height = " + predictions.get(0).getParentImageHeight() + ", Time = " +
                     new Date(predictions.get(0).getTimeStamp()));
