@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * Class to handle OpenCV's object classification model for BinBot's waste detection.
  *
- * @author Sean Reddington
- * @version 1.0
- * @since 2019-10-25
+ * @author Sean Reddington, Michael Savitski
+ * @version 2.0
+ * @since 2019-11-16
  */
 class WasteDetector {
 
@@ -180,7 +180,6 @@ class WasteDetector {
 
                 int w = mat.cols();
                 int h = mat.rows();
-                System.out.println("Mat width = " + w + ", Mat height = " + h);
                 int type = BufferedImage.TYPE_3BYTE_BGR;
                 outputImage = new BufferedImage(w, h, type);
 
