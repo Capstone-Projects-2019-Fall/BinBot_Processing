@@ -4,10 +4,8 @@ import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.data.Prediction;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
-import edu.temple.capstone.BinBotServer.mobileInterface.AppMessage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +32,9 @@ public class Demo {
         ImageIO.write(testImage, "jpg", outputFile);
 
         for (Prediction prediction : predictions) {
-            System.out.println("Predicted box: (" + prediction.getUpperX() + ", " +
-                    prediction.getUpperY() + "), (" + prediction.getLowerX() + ", " +
-                    prediction.getLowerY() + ") Class: " + prediction.getIdClass() +
+            System.out.println("Predicted box: (" + prediction.getUpperLeftX() + ", " +
+                    prediction.getUpperLeftY() + "), (" + prediction.getLowerRightX() + ", " +
+                    prediction.getLowerRightY() + ") Class: " + prediction.getIdClass() +
                     "  Score: " + prediction.getCertainty());
         }
     }

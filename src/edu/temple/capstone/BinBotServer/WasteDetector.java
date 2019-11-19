@@ -4,18 +4,14 @@ import edu.temple.capstone.BinBotServer.data.Prediction;
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Tensor;
 import org.tensorflow.types.UInt8;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,12 +160,12 @@ class WasteDetector {
 
                         if (prediction.getCertainty() > minimumScore) {
 
-                            Imgproc.rectangle(mat, new Point(prediction.getUpperX(), prediction.getUpperY()),
-                                    new Point(prediction.getLowerX(), prediction.getLowerY()),
+                            Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
+                                    new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
                                     new Scalar(0, 255, 0), thickness);
                             Imgproc.putText(mat, "Class:" + prediction.getIdClass() + ", " +
                                             prediction.getCertainty(),
-                                    new Point(prediction.getUpperX(), prediction.getUpperY() - thickness), 1, 1,
+                                    new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1, 1,
                                     new Scalar(0, 255, 0));
 
                         }

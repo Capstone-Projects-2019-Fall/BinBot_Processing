@@ -9,57 +9,73 @@ package edu.temple.capstone.BinBotServer.data;
  */
 public class Prediction {
 
-    private int upperX, upperY, lowerX, lowerY, idClass;
+    private int upperLeftX, upperLeftY, lowerRightX, lowerRightY, idClass;
     private float certainty;
 
     public Prediction() {
-        upperX = 0;
-        upperY = 0;
-        lowerX = 0;
-        lowerY = 0;
+        upperLeftX = 0;
+        upperLeftY = 0;
+        lowerRightX = 0;
+        lowerRightY = 0;
         idClass = 1;
         certainty = 0.0f;
     }
 
-    public Prediction(int upperX, int upperY, int lowerX, int lowerY, int idClass, float certainty) {
-        this.upperX = upperX;
-        this.upperY = upperY;
-        this.lowerX = lowerX;
-        this.lowerY = lowerY;
+    public Prediction(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, int idClass, float certainty) {
+        this.upperLeftX = upperLeftX;
+        this.upperLeftY = upperLeftY;
+        this.lowerRightX = lowerRightX;
+        this.lowerRightY = lowerRightY;
         this.idClass = idClass;
         this.certainty = certainty;
     }
 
-    public int getUpperX() {
-        return upperX;
+    public int getCenterX() {
+        return ((upperLeftX + lowerRightX) / 2);
     }
 
-    public void setUpperX(int upperX) {
-        this.upperX = upperX;
+    public int getCenterY() {
+        return ((upperLeftY + lowerRightY) / 2);
     }
 
-    public int getUpperY() {
-        return upperY;
+    public int getWidth() {
+        return (lowerRightX - upperLeftX);
     }
 
-    public void setUpperY(int upperY) {
-        this.upperY = upperY;
+    public int getHeight() {
+        return (lowerRightY - upperLeftY);
     }
 
-    public int getLowerX() {
-        return lowerX;
+    public int getUpperLeftX() {
+        return upperLeftX;
     }
 
-    public void setLowerX(int lowerX) {
-        this.lowerX = lowerX;
+    public void setUpperLeftX(int upperLeftX) {
+        this.upperLeftX = upperLeftX;
     }
 
-    public int getLowerY() {
-        return lowerY;
+    public int getUpperLeftY() {
+        return upperLeftY;
     }
 
-    public void setLowerY(int lowerY) {
-        this.lowerY = lowerY;
+    public void setUpperLeftY(int upperLeftY) {
+        this.upperLeftY = upperLeftY;
+    }
+
+    public int getLowerRightX() {
+        return lowerRightX;
+    }
+
+    public void setLowerRightX(int lowerRightX) {
+        this.lowerRightX = lowerRightX;
+    }
+
+    public int getLowerRightY() {
+        return lowerRightY;
+    }
+
+    public void setLowerRightY(int lowerRightY) {
+        this.lowerRightY = lowerRightY;
     }
 
     public int getIdClass() {
