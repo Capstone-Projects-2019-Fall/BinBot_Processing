@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Class used to containerize any methods or functionality needed for demo 1.
@@ -31,11 +32,18 @@ public class Demo {
         File outputFile = new File("res/result.jpg");
         ImageIO.write(testImage, "jpg", outputFile);
 
+        if (predictions.size() > 0) {
+            System.out.println("Parent image width = " + predictions.get(0).getParentImageWidth() +
+                    ", Parent image height = " + predictions.get(0).getParentImageHeight() + ", Time = " +
+                    new Date(predictions.get(0).getTimeStamp()));
+        }
         for (Prediction prediction : predictions) {
             System.out.println("Predicted box: (" + prediction.getUpperLeftX() + ", " +
                     prediction.getUpperLeftY() + "), (" + prediction.getLowerRightX() + ", " +
                     prediction.getLowerRightY() + ") Class: " + prediction.getIdClass() +
                     "  Score: " + prediction.getCertainty());
+            System.out.println("Width = " + prediction.getWidth() + ", Height = " + prediction.getHeight() +
+                    ", Center = (" + prediction.getCenterX() + ", " + prediction.getCenterY() + ")");
         }
     }
 

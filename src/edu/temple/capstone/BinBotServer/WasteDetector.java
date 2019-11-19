@@ -137,6 +137,7 @@ class WasteDetector {
                 }
 
                 predictions = new ArrayList<>();
+                long predictionTimeStamp = System.currentTimeMillis();
 
                 for (int i = 0; i < boxes.length; i++) {
                     if ((boxes[i][0] + boxes[i][1] + boxes[i][2] + boxes[i][3]) == 0) {
@@ -147,7 +148,8 @@ class WasteDetector {
                         int x1 = Math.round(boxes[i][1]);
                         int y2 = Math.round(boxes[i][2]);
                         int x2 = Math.round(boxes[i][3]);
-                        predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i]));
+                        predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
+                                predictionTimeStamp));
                     }
                 }
 

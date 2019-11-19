@@ -9,8 +9,9 @@ package edu.temple.capstone.BinBotServer.data;
  */
 public class Prediction {
 
-    private int upperLeftX, upperLeftY, lowerRightX, lowerRightY, idClass;
+    private int upperLeftX, upperLeftY, lowerRightX, lowerRightY, idClass, parentImageWidth, parentImageHeight;
     private float certainty;
+    private long timeStamp;
 
     public Prediction() {
         upperLeftX = 0;
@@ -19,15 +20,22 @@ public class Prediction {
         lowerRightY = 0;
         idClass = 1;
         certainty = 0.0f;
+        parentImageWidth = 0;
+        parentImageHeight = 0;
+        timeStamp = System.currentTimeMillis();
     }
 
-    public Prediction(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, int idClass, float certainty) {
+    public Prediction(int upperLeftX, int upperLeftY, int lowerRightX, int lowerRightY, int idClass, float certainty,
+                      int parentImageWidth, int parentImageHeight, long timeStamp) {
         this.upperLeftX = upperLeftX;
         this.upperLeftY = upperLeftY;
         this.lowerRightX = lowerRightX;
         this.lowerRightY = lowerRightY;
         this.idClass = idClass;
         this.certainty = certainty;
+        this.parentImageWidth = parentImageWidth;
+        this.parentImageHeight = parentImageHeight;
+        this.timeStamp = timeStamp;
     }
 
     public int getCenterX() {
@@ -92,5 +100,29 @@ public class Prediction {
 
     public void setCertainty(float certainty) {
         this.certainty = certainty;
+    }
+
+    public int getParentImageWidth() {
+        return parentImageWidth;
+    }
+
+    public void setParentImageWidth(int parentImageWidth) {
+        this.parentImageWidth = parentImageWidth;
+    }
+
+    public int getParentImageHeight() {
+        return parentImageHeight;
+    }
+
+    public void setParentImageHeight(int parentImageHeight) {
+        this.parentImageHeight = parentImageHeight;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }
