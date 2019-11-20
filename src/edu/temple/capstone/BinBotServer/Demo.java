@@ -1,11 +1,16 @@
 package edu.temple.capstone.BinBotServer;
 
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
+import edu.temple.capstone.BinBotServer.data.Prediction;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import edu.temple.capstone.BinBotServer.instructions.Status;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Class used to containerize any methods or functionality needed for demo 1.
@@ -17,6 +22,31 @@ import java.io.IOException;
 public class Demo {
     private final static int BOT_PORT = 7001;
     private static BotConnection botConnection = null;
+
+    public static void main(String[] args) throws IOException {
+        BufferedImage img = ImageIO.read(new File("res/test.jpg"));
+        WasteDetector detector = new WasteDetector();
+        BufferedImage testImage = detector.imageDetect(img);
+        ArrayList<Prediction> predictions = detector.getPredictions();
+
+        File outputFile = new File("res/result.jpg");
+        ImageIO.write(testImage, "jpg", outputFile);
+
+        if (predictions.size() > 0) {
+            System.out.println("Prediction latency = " + detector.getMostRecentLatency() + "milliseconds.");
+            System.out.println("Parent image width = " + predictions.get(0).getParentImageWidth() +
+                    ", Parent image height = " + predictions.get(0).getParentImageHeight() + ", Time = " +
+                    new Date(predictions.get(0).getTimeStamp()));
+        }
+        for (Prediction prediction : predictions) {
+            System.out.println("Predicted box: (" + prediction.getUpperLeftX() + ", " +
+                    prediction.getUpperLeftY() + "), (" + prediction.getLowerRightX() + ", " +
+                    prediction.getLowerRightY() + ") Class: " + prediction.getIdClass() +
+                    "  Score: " + prediction.getCertainty());
+            System.out.println("Width = " + prediction.getWidth() + ", Height = " + prediction.getHeight() +
+                    ", Center = (" + prediction.getCenterX() + ", " + prediction.getCenterY() + ")");
+        }
+    }
 
 
     /**

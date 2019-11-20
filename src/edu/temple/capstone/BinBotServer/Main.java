@@ -41,7 +41,7 @@ public class Main {
      * @since 2019-10-25
      */
     public static void main(String[] args) throws IOException {
-    	BufferedImage img = ImageIO.read(new File("C:/Users/Sean/Desktop/longcat.jpg"));
+    	BufferedImage img = ImageIO.read(new File("res/longcat.jpg"));
 		AppMessage a = new AppMessage(true, img);
 		System.out.println(a.json());
         setup();
