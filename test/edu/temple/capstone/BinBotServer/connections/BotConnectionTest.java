@@ -21,7 +21,7 @@ class BotConnectionTest
 	static void test() throws IOException {
 		botConnection.accept();
 		botConnection.send(JSON_TEST);
-		String recieved = botConnection.receive();
-		assertEquals(JSON_TEST, recieved);
+		String received = botConnection.receive();
+		assertEquals(JSON_TEST, received);
 	}
 }
