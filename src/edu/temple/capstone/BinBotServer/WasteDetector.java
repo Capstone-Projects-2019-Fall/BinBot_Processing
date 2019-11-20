@@ -239,34 +239,6 @@ class WasteDetector {
         this.mat.put(0, 0, pixels);
     }
 
-    public boolean containsWaste() {
-        return true;
-    }
-
-    public double objX() {
-        return 0;
-    }
-
-    public double objY() {
-        return 0;
-    }
-
-    public double objHeight() {
-        return 0;
-    }
-
-    public double objWidth() {
-        return 0;
-    }
-
-    public double imgHeight() {
-        return 0;
-    }
-
-    public double imgWidth() {
-        return 0;
-    }
-
     public void loadImage(BufferedImage img) {
         return;
     }

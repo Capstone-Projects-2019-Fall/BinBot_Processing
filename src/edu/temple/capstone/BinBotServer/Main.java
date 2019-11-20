@@ -1,5 +1,6 @@
 package edu.temple.capstone.BinBotServer;
 
+import edu.temple.capstone.BinBotServer.data.Prediction;
 import edu.temple.capstone.BinBotServer.instructions.TreadInstruction;
 import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
@@ -93,28 +94,24 @@ public class Main {
     	Status status = null;
     	Movement movement = null;
 
-    	switch (prev.status()) {
-		case PATROL:
-			wasteDetector.loadImage(prev.img());
-			if (wasteDetector.containsWaste()) {
-				status = Status.ANGLE;
-				movement = TreadInstruction.calcInstructions(wasteDetector.objX(), wasteDetector.objY(), wasteDetector.objWidth(), wasteDetector.objHeight(), wasteDetector.imgWidth(), wasteDetector.imgHeight()).get(0);
-				patrolSequence.reset();
-			} else {
-				status = Status.PATROL;
-				movement = patrolSequence.next();
-			}
-			break;
-		case ANGLE:
-			movement = TreadInstruction.calcInstructions(wasteDetector.objX(), wasteDetector.objY(), wasteDetector.objWidth(), wasteDetector.objHeight(), wasteDetector.imgWidth(), wasteDetector.imgHeight()).get(0);
+		wasteDetector.loadImage(prev.img());
+		List<Prediction> preds = wasteDetector.getPredictions();
+		if (preds == null || preds.isEmpty()) {
+			status = Status.PATROL;
+			movement = patrolSequence.next();
+		} else {
+			Prediction p = preds.get(0);
+			movement = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
+														 p.getWidth(), p.getHeight(),
+														 p.getParentImageWidth(), p.getParentImageHeight()
+														).get(0);
 			if (movement.angle() == 0.0) {
 				status = Status.RETRIEVE;
 			} else {
 				status = Status.ANGLE;
 			}
-			break;
-		default:
-			break;
+
+			patrolSequence.reset();
 		}
 
 		List<Movement> treads = new ArrayList<>();
