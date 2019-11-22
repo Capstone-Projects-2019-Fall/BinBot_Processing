@@ -31,8 +31,14 @@ class WasteDetector {
     private ArrayList<Prediction> predictions;
     private long startTime, endTime, mostRecentLatency;
 
+    final private int CUP = 47;
+    final private int FORK = 48;
+
     //This value can be adjusted, currently only showing boxes with 70% or more prediction score
     final private float minimumScore = .70f;
+
+    //This array can be modified to contain classes you wish to predict
+    final private int[] desiredClasses = {FORK, CUP};
 
     // Loading the OpenCV core library
     static {
@@ -152,8 +158,13 @@ class WasteDetector {
                         int x1 = Math.round(boxes[i][1]);
                         int y2 = Math.round(boxes[i][2]);
                         int x2 = Math.round(boxes[i][3]);
-                        predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
-                                predictionTimeStamp));
+                        //This will only add predictions to the list if they are of a desired class
+                        for (int desiredClass : desiredClasses) {
+                            if (classes[i] == desiredClass) {
+                                predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
+                                        predictionTimeStamp));
+                            }
+                        }
                     }
                 }
 
