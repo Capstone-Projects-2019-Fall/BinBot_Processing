@@ -102,7 +102,7 @@ public class Demo {
         jsonReceive = botConnection.receive();
         System.out.println("received image from server");
         Instruction imgReceive = new Instruction(jsonReceive);
-        return imgReceive.img();
+        return imgReceive.getImage();
     }
 
 }

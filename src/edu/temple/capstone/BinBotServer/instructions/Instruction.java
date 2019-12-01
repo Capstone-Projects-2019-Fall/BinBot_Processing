@@ -86,7 +86,7 @@ public class Instruction {
     }
 
     /**
-     * This method returns the Instruction class a a json string which can be sent to the BinBot robot and interpreted
+     * This method returns the Instruction class a json string which can be sent to the BinBot robot and interpreted
      * as a set of commands to follow in the format described above.
      *
      * @author Sean DiGirolamo
@@ -154,22 +154,32 @@ public class Instruction {
      * @author Sean DiGirolamo
      * @since 2019-10-21
      */
-    public BufferedImage img() {
+    public BufferedImage getImage() {
         return this.img;
     }
 
+    /**
+     * This method takes a base64 encoded string of a jpeg image and decodes it to a returned buffered image.
+     * @author Sean Reddington
+     * @since 2019-10-25
+     */
     private BufferedImage stringToBufferedImage(String s) {
-        BufferedImage retval = null;
+        BufferedImage bufferedImage = null;
         byte[] bytes = Base64.getDecoder().decode(s);
         try {
-            retval = ImageIO.read(new ByteArrayInputStream(bytes));
+            bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return retval;
+        return bufferedImage;
     }
 
+    /**
+     * This method takes a BufferedImage object and encodes it to a returned base64 string.
+     * @author Sean Reddington
+     * @since 2019-10-25
+     */
     private String bufferedImageToString(BufferedImage bi) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {

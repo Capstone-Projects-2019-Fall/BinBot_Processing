@@ -94,7 +94,7 @@ public class Main {
     	Status status = null;
     	Movement movement = null;
 
-		wasteDetector.loadImage(prev.img());
+		wasteDetector.loadImage(prev.getImage());
 		List<Prediction> preds = wasteDetector.getPredictions();
 		if (preds == null || preds.isEmpty()) {
 			status = Status.PATROL;
