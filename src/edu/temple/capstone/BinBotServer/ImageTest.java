@@ -12,21 +12,27 @@ public class ImageTest {
 
     private static final int PORT = 7001;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         String jpg_file1 = "res/jpg_b64.txt";
         String jpg_file3 = "res/test.jpg";
+        String jpg_file4 = "res/stream.txt";
 
-        String jpg_str = readFileAsString(jpg_file1);
+//        String jpg_str = readFileAsString(jpg_file1);
 //        byte[] jpg_b64 = readFileAsByteArray(jpg_file1);
-        BufferedImage bufferedImage = base64ToBufferedImage(jpg_file1);
 
-        try {
-            File outputFile = new File("image.jpg");
-            ImageIO.write(bufferedImage, "jpg", outputFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] stream = FileUtils.readFileToByteArray(new File(jpg_file4));
+        byte[] b64_stream = Base64.getEncoder().encode(stream);
+        String encoded = Base64.getEncoder().encodeToString(b64_stream);
+
+        BufferedImage bufferedImage = base64ToBufferedImage(jpg_file3);
+//
+//        try {
+//            File outputFile = new File("image.jpg");
+//            ImageIO.write(bufferedImage, "jpg", outputFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
         System.out.println("Breakpoint");
