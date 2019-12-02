@@ -66,7 +66,7 @@ public class TreadInstruction {
                 // Turn more left to center
                 double theta = Math.atan2(distance, xDiff);
                 angle = Math.toDegrees(theta);
-//                angle += 180.0; // angle > 180 tells BinBot to turn left
+                angle += 180.0; // angle > 180 tells BinBot to turn left
                 movements.add(new Movement(angle, 1.0));
                 movements.add(new Movement(1.0, distance / 4));
             }
