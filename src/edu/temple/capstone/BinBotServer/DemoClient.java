@@ -68,10 +68,10 @@ public class DemoClient extends JFrame {
         this.detector = new WasteDetector();
         this.patrolSequence = new PatrolSequence();
 
-        // Android app connection
-        appConnectionThread = new AppConnectionThread(APP_PORT);
-        appConnectionThread.start();
-        System.out.println("AppConnectionThread started");
+//        // Android app connection
+//        appConnectionThread = new AppConnectionThread(APP_PORT);
+//        appConnectionThread.start();
+//        System.out.println("AppConnectionThread started");
 
         // BinBot connection
         this.botConnection = new BotConnection(BOT_PORT);
@@ -146,19 +146,19 @@ public class DemoClient extends JFrame {
      */
     @Override
     public void paint(Graphics g) {
-        System.out.println(appConnectionThread.poweredState());
-        while (appConnectionThread.poweredState()) {
-            g = contentPane.getGraphics();
-            BufferedImage image = processPayload();
-            g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
-            botConnection.accept();
-        }
+//        System.out.println(appConnectionThread.poweredState());
+//        while (appConnectionThread.poweredState()) {
+//            g = contentPane.getGraphics();
+//            BufferedImage image = processPayload();
+//            g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
+//            botConnection.accept();
+//        }
 
-//        // Without mobile app
-//        g = contentPane.getGraphics();
-//        BufferedImage image = loop();
-//        g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
-//        botConnection.accept();
+        // Without mobile app
+        g = contentPane.getGraphics();
+        BufferedImage image = processPayload();
+        g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
+        botConnection.accept();
 
     }
 
