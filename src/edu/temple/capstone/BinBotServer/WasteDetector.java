@@ -23,7 +23,7 @@ import java.util.List;
  * @version 2.0
  * @since 2019-11-16
  */
-class WasteDetector {
+public class WasteDetector {
 
     private Mat mat;
     private BufferedImage bufferedImage;
@@ -64,13 +64,13 @@ class WasteDetector {
      * @author Sean Reddington
      * @since 2019-10-25
      */
-    BufferedImage imageDetect(BufferedImage img) {
+    public BufferedImage imageDetect(BufferedImage img) {
         this.bufferedImage = img;
         startTime = System.currentTimeMillis();
         bufferedImg2Mat();
         endTime = System.currentTimeMillis();
         mostRecentLatency = endTime - startTime;
-        return this.getImage(this.mat);
+        return this.processImage(this.mat);
     }
 
     /**
@@ -105,7 +105,7 @@ class WasteDetector {
      * @author Sean Reddington
      * @since 2019-10-25
      */
-    private BufferedImage getImage(Mat mat) {
+    private BufferedImage processImage(Mat mat) {
         getSpace(mat);
 
         float[] scores, classes;
@@ -152,8 +152,7 @@ class WasteDetector {
                 for (int i = 0; i < boxes.length; i++) {
                     if ((boxes[i][0] + boxes[i][1] + boxes[i][2] + boxes[i][3]) == 0) {
                         break;
-                    }
-                    else {
+                    } else {
                         int y1 = Math.round(boxes[i][0]);
                         int x1 = Math.round(boxes[i][1]);
                         int y2 = Math.round(boxes[i][2]);
@@ -180,10 +179,13 @@ class WasteDetector {
                             Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
                                     new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
                                     new Scalar(0, 255, 0), thickness);
-                            Imgproc.putText(mat, "Class:" + prediction.getIdClass() + ", " +
-                                            prediction.getCertainty(),
-                                    new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1, 1,
-                                    new Scalar(0, 255, 0));
+
+//                            String text = "Class:" + prediction.getIdClass() + ", " + prediction.getCertainty();
+                            String text = matchClassID(prediction.getIdClass()) + ": " + prediction.getCertainty();
+
+                            Imgproc.putText(mat, text, new Point(prediction.getUpperLeftX(),
+                                            prediction.getUpperLeftY() - thickness),
+                                    1, 1, new Scalar(0, 255, 0));
 
                         }
 
@@ -197,16 +199,16 @@ class WasteDetector {
                 outputImage = new BufferedImage(w, h, type);
 
                 WritableRaster raster = outputImage.getRaster();
-                DataBufferByte dataBuffer = (DataBufferByte)raster.getDataBuffer();
+                DataBufferByte dataBuffer = (DataBufferByte) raster.getDataBuffer();
                 byte[] data = dataBuffer.getData();
                 mat.get(0, 0, data);
             }
         }
 
         if (outputImage != null) {
+            bufferedImage = outputImage;
             return outputImage;
-        }
-        else {
+        } else {
             return bufferedImage;
         }
     }
@@ -226,7 +228,7 @@ class WasteDetector {
         bgr2rgb(data);
         final long BATCH_SIZE = 1;
         final long CHANNELS = 3;
-        long[] shape = new long[] {BATCH_SIZE, bufferedImage.getHeight(), bufferedImage.getWidth(), CHANNELS};
+        long[] shape = new long[]{BATCH_SIZE, bufferedImage.getHeight(), bufferedImage.getWidth(), CHANNELS};
         return Tensor.create(UInt8.class, shape, ByteBuffer.wrap(data));
     }
 
@@ -264,5 +266,20 @@ class WasteDetector {
 
     public void setMostRecentLatency(long mostRecentLatency) {
         this.mostRecentLatency = mostRecentLatency;
+    }
+
+    public String matchClassID(int id) {
+        switch (id) {
+            case CUP:
+                return "CUP";
+            case FORK:
+                return "FORK";
+            default:
+                return String.valueOf(id);
+        }
+    }
+
+    public BufferedImage getBufferedImage() {
+        return this.bufferedImage;
     }
 }

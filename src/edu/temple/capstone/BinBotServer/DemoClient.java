@@ -4,10 +4,12 @@ import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
 import org.opencv.core.Core;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -30,7 +32,7 @@ public class DemoClient extends JFrame {
     private JPanel contentPane;
     private static final int PORT = 7001;
     private BotConnection botConnection;
-    private WasteDetector detector;
+    public WasteDetector detector;
 
     /**
      * Main class to test the image capturing and display lifecycle of BinBot. The Robot's Raspberry Pi software will
@@ -85,11 +87,11 @@ public class DemoClient extends JFrame {
      * @since 2019-12-01
      */
     public void setup() throws IOException {
+        this.detector = new WasteDetector();
         this.botConnection = new BotConnection(PORT);
         System.out.println("Waiting for connections...");
         botConnection.accept();
         System.out.println("Connection established!");
-        this.detector = new WasteDetector();
     }
 
     /**
@@ -103,10 +105,24 @@ public class DemoClient extends JFrame {
         System.out.println("Attempting to receive string from connection...");
         String jsonReceive = this.botConnection.receive();
         //        System.out.println("received: " + jsonReceive);
-        System.out.println("received image from BinBot");
-        Instruction instruction = new Instruction(jsonReceive);
-        BufferedImage processed_image = instruction.getImage();
-//        BufferedImage processed_image = detector.imageDetect(instruction.getImage());
+        System.out.println("Received payload from BinBot");
+        Instruction fromBinBot = new Instruction(jsonReceive);
+//        BufferedImage processed_image = instruction.getImage();
+        BufferedImage processed_image = this.detector.imageDetect(fromBinBot.getImage());
+        Instruction toBinBot = fromBinBot.generateInstruction(this.detector);
+//        BufferedImage processed_image = this.detector.getBufferedImage();
+
+//        //Write image from BinBot to file
+//        try {
+//            File outputFile = new File("res/result.jpg");
+//            ImageIO.write(processed_image, "jpg", outputFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        System.out.println("Sending payload to BinBot");
+        this.botConnection.send(toBinBot.json());
+        this.botConnection.accept();
         return processed_image;
     }
 

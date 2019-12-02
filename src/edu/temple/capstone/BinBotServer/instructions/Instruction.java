@@ -1,5 +1,8 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
+import edu.temple.capstone.BinBotServer.PatrolSequence;
+import edu.temple.capstone.BinBotServer.WasteDetector;
+import edu.temple.capstone.BinBotServer.data.Prediction;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
@@ -31,7 +34,7 @@ import java.util.*;
  * containing pairs of angles it should turn and distances it should travel forward after turning,
  * and arms is an array of angles each joint should turn.
  *
- * @author Sean DiGirolamo
+ * @author Sean DiGirolamo, Sean Reddington
  * @since 2019-10-18
  */
 public class Instruction {
@@ -39,6 +42,7 @@ public class Instruction {
     private BufferedImage img;
     private List<Movement> treads;
     private List<Double> arms;
+    public Double distance;
 
     /**
      * This constructor takes as input a json string. It assumes that the json is properly formatted in the proper
@@ -50,21 +54,54 @@ public class Instruction {
     public Instruction(String json) {
         JSONObject jsonObject = new JSONObject(json);
 
+        // Parse image first and remove from jsonObject to improve efficiency
+        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
+        jsonObject.remove("img");
+
         this.status = Status.valueOf(jsonObject.getString("status"));
 
-        this.treads = new ArrayList<>();
+//        this.treads = new ArrayList<>();
+        this.distance = jsonObject.getDouble("treads");
 
-        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
 
-        for (Object o : jsonObject.getJSONArray("treads")) {
-            JSONObject jo = (JSONObject) o;
-			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
+//        for (Object o : jsonObject.getJSONArray("treads")) {
+//            JSONObject jo = (JSONObject) o;
+//			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
+//        }
+//
+//        this.arms = new ArrayList<>();
+//        for (Object o : jsonObject.getJSONArray("arms")) {
+//            arms.add(((JSONObject) o).getDouble("angle"));
+//        }
+    }
+
+    public Instruction generateInstruction(WasteDetector wasteDetector) {
+        Status status = null;
+        List<Movement> treads = new ArrayList<>();
+        Movement movement = null;
+        PatrolSequence patrolSequence = new PatrolSequence();
+
+        List<Prediction> preds = wasteDetector.getPredictions();
+        if (preds == null || preds.isEmpty()) {
+            status = Status.PATROL;
+            treads.add(patrolSequence.next());
+        } else {
+            Prediction p = preds.get(0);
+            treads = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
+                    p.getWidth(), p.getHeight(),
+                    p.getParentImageWidth(), p.getParentImageHeight(), this.distance
+            );
+            movement = treads.get(0);
+            if (movement.angle() == 0.0 && movement.distance() == 1.0) { // in range of arm
+                status = Status.RETRIEVE;
+            } else {
+                status = Status.MOVE;
+            }
+
+            patrolSequence.reset();
         }
 
-        this.arms = new ArrayList<>();
-        for (Object o : jsonObject.getJSONArray("arms")) {
-            arms.add(((JSONObject) o).getDouble("angle"));
-        }
+        return new Instruction(status, wasteDetector.getBufferedImage(), treads, null);
     }
 
     /**
@@ -79,7 +116,7 @@ public class Instruction {
         this.status = Status.PATROL;
         this.img = null;
         this.treads = new ArrayList<>();
-		this.treads.add(new Movement(0.0, 00.0));
+        this.treads.add(new Movement(0.0, 00.0));
         this.arms = new ArrayList<>();
         this.arms = new ArrayList<>();
         this.arms.add(0.0);
@@ -94,16 +131,17 @@ public class Instruction {
      */
     public String json() {
         StringBuilder retval = new StringBuilder("{\"status\":\"")
-            .append(this.status.toString())
-            .append("\",")
-            .append("\"img\":" + "\"");
+                .append(this.status.toString())
+                .append("\",")
+                .append("\"img\":" + "\"");
 
         if (this.img != null) {
-            retval.append(bufferedImageToString(img));
+//            retval.append(bufferedImageToString(img));
+            retval.append("RECEIVED");
         }
 
         retval.append("\",")
-            .append("\"treads\":[");
+                .append("\"treads\":[");
 
         if (this.treads != null) {
             for (Movement movement : this.treads) {
@@ -116,13 +154,13 @@ public class Instruction {
         }
 
         retval.append("],")
-            .append("\"arms\":[");
+                .append("\"arms\":[");
 
         if (this.arms != null) {
             for (Double d : this.arms) {
                 retval.append("{\"angle\":")
-                    .append(d)
-                    .append("}");
+                        .append(d)
+                        .append("}");
                 if (!d.equals(this.arms.get(this.arms.size() - 1))) {
                     retval.append(",");
                 }
@@ -160,6 +198,7 @@ public class Instruction {
 
     /**
      * This method takes a base64 encoded string of a jpeg image and decodes it to a returned buffered image.
+     *
      * @author Sean Reddington
      * @since 2019-10-25
      */
@@ -177,6 +216,7 @@ public class Instruction {
 
     /**
      * This method takes a BufferedImage object and encodes it to a returned base64 string.
+     *
      * @author Sean Reddington
      * @since 2019-10-25
      */

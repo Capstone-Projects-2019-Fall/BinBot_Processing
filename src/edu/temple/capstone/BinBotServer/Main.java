@@ -42,9 +42,9 @@ public class Main {
      * @since 2019-10-25
      */
     public static void main(String[] args) throws IOException {
-    	BufferedImage img = ImageIO.read(new File("res/longcat.jpg"));
-		AppMessage a = new AppMessage(true, img);
-		System.out.println(a.json());
+        BufferedImage img = ImageIO.read(new File("res/longcat.jpg"));
+        AppMessage a = new AppMessage(true, img);
+        System.out.println(a.json());
         setup();
         loop();
     }
@@ -58,11 +58,11 @@ public class Main {
     public static void setup() {
         System.out.println("BinBot server starting...");
 
-		appConnectionThread = new AppConnectionThread(APP_PORT);
-		appConnectionThread.start();
-		System.out.println("AppConnectionThread started");
+        appConnectionThread = new AppConnectionThread(APP_PORT);
+        appConnectionThread.start();
+        System.out.println("AppConnectionThread started");
 
-		botConnection = new BotConnection(BOT_PORT);
+        botConnection = new BotConnection(BOT_PORT);
     }
 
     /**
@@ -70,12 +70,12 @@ public class Main {
      *
      * @author Sean Reddington, Sean DiGirolamo
      * @since 2019-10-2
-	 */
+     */
     public static void loop() throws IOException {
         while (true) {
-        	System.out.println(appConnectionThread.poweredState());
+            System.out.println(appConnectionThread.poweredState());
             while (appConnectionThread.poweredState()) {
-            	botConnection.accept();
+                botConnection.accept();
 
                 String json = botConnection.receive();
 
@@ -90,33 +90,33 @@ public class Main {
     }
 
     public static Instruction generateInstruction(Instruction prev) {
-    	Instruction retval = null;
-    	Status status = null;
-    	Movement movement = null;
+        Instruction retval = null;
+        Status status = null;
+        Movement movement = null;
 
-		wasteDetector.loadImage(prev.getImage());
-		List<Prediction> preds = wasteDetector.getPredictions();
-		if (preds == null || preds.isEmpty()) {
-			status = Status.PATROL;
-			movement = patrolSequence.next();
-		} else {
-			Prediction p = preds.get(0);
-			movement = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
-														 p.getWidth(), p.getHeight(),
-														 p.getParentImageWidth(), p.getParentImageHeight()
-														).get(0);
-			if (movement.angle() == 0.0) {
-				status = Status.RETRIEVE;
-			} else {
-				status = Status.ANGLE;
-			}
+        wasteDetector.loadImage(prev.getImage());
+        List<Prediction> preds = wasteDetector.getPredictions();
+        if (preds == null || preds.isEmpty()) {
+            status = Status.PATROL;
+            movement = patrolSequence.next();
+        } else {
+            Prediction p = preds.get(0);
+            movement = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
+                    p.getWidth(), p.getHeight(),
+                    p.getParentImageWidth(), p.getParentImageHeight(), prev.distance
+            ).get(0);
+            if (movement.angle() == 0.0) {
+                status = Status.RETRIEVE;
+            } else {
+                status = Status.MOVE;
+            }
 
-			patrolSequence.reset();
-		}
+            patrolSequence.reset();
+        }
 
-		List<Movement> treads = new ArrayList<>();
-    	treads.add(movement);
+        List<Movement> treads = new ArrayList<>();
+        treads.add(movement);
 
-		return new Instruction(status, null, treads, null);
-	}
+        return new Instruction(status, null, treads, null);
+    }
 }
