@@ -24,9 +24,8 @@ public class TreadInstruction {
     public static List<Movement> calcInstructions(double x, double xBoxCenter, double y, double yBoxCenter, double w, double h, double imgW, double imgH, double distance) {
         // I calculated the angle it sees at, 52, based on sees 1 ft wide at 1ft distance
         List<Movement> movements = new ArrayList<>();
-        distance *= 100;
         double angle = -1.0;
-
+        distance *= 10.0;
         double xImgCenter = imgW / 2;
         double yImgCenter = imgH / 2;
         double imgHalfPoint = (xImgCenter + yImgCenter);
@@ -40,35 +39,37 @@ public class TreadInstruction {
             double xDiff = xBoxCenter - xImgCenter;
             double rightBias = xImgCenter + centeredBias;
             if (xDiff < centeredBias) { // Box is approximately in center of image
-                if (inRange(distance)) { // If BinBot is in reach of the object
+                if (inRange(distance/10.0)) { // If BinBot is in reach of the object
+                    System.out.println("IN RANGE");
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up
                 } else {
                     movements.add(new Movement(0.0, distance / 2)); // Move forward half the distance to sensor's distance
                 }
             } else {
                 // Turn more right to center
-                double theta = Math.atan2(distance, xDiff);
+                double theta = Math.atan2(distance * 10, xDiff);
                 angle = Math.toDegrees(theta);
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(1.0, distance / 4));
+                movements.add(new Movement(0.0, distance / 4));
 
             }
         } else { // Box is left of img center
             double xDiff = xImgCenter - xBoxCenter;
             double leftBias = xImgCenter - centeredBias;
             if (xDiff < centeredBias) { // Box is approximately in center of image
-                if (inRange(distance)) { // If BinBot is in reach of the object
+                if (inRange(distance/10.0)) { // If BinBot is in reach of the object
+                    System.out.println("IN RANGE");
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up
                 } else {
                     movements.add(new Movement(0.0, distance / 2)); // Move forward half the distance to sensor's distance
                 }
             } else {
                 // Turn more left to center
-                double theta = Math.atan2(distance, xDiff);
+                double theta = Math.atan2(distance * 10, xDiff);
                 angle = Math.toDegrees(theta);
                 angle += 180.0; // angle > 180 tells BinBot to turn left
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(1.0, distance / 4));
+                movements.add(new Movement(0.0, distance / 4));
             }
         }
 
