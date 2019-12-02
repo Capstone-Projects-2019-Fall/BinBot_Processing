@@ -100,7 +100,8 @@ public class Main {
             treads.add(patrolSequence.next());
         } else {
             Prediction p = preds.get(0);
-            treads = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
+            treads = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getCenterX(),
+                    p.getUpperLeftY(), p.getCenterY(),
                     p.getWidth(), p.getHeight(),
                     p.getParentImageWidth(), p.getParentImageHeight(), prev.distance
             );

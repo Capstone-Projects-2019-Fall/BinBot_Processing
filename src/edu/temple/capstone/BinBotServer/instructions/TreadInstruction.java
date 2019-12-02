@@ -21,7 +21,7 @@ public class TreadInstruction {
      * @author Sean DiGirolamo, Sean Reddington
      * @since 2019-10-09
      */
-    public static List<Movement> calcInstructions(double x, double y, double w, double h, double imgW, double imgH, double distance) {
+    public static List<Movement> calcInstructions(double x, double xBoxCenter, double y, double yBoxCenter, double w, double h, double imgW, double imgH, double distance) {
         // I calculated the angle it sees at, 52, based on sees 1 ft wide at 1ft distance
         List<Movement> movements = new ArrayList<>();
         distance *= 100;
@@ -31,15 +31,15 @@ public class TreadInstruction {
         double yImgCenter = imgH / 2;
         double imgHalfPoint = (xImgCenter + yImgCenter);
 
-        double xBoxCenter = (x + w) / 2;
-        double yBoxCenter = (y + h) / 2;
+//        double xBoxCenter = (x + w) / 2;
+//        double yBoxCenter = (y + h) / 2;
 
-        final double centeredBias = 100; // approximation that bounding box is in center of image
+        final double centeredBias = 113; // approximation that bounding box is in center of image
 
         if (xBoxCenter > xImgCenter) { // Box is right of img center
             double xDiff = xBoxCenter - xImgCenter;
-//            double rightBias = xImgCenter + centeredBias;
-            if (xDiff > centeredBias) { // Box is approximately in center of image
+            double rightBias = xImgCenter + centeredBias;
+            if (xDiff < centeredBias) { // Box is approximately in center of image
                 if (inRange(distance)) { // If BinBot is in reach of the object
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up
                 } else {
@@ -55,7 +55,7 @@ public class TreadInstruction {
             }
         } else { // Box is left of img center
             double xDiff = xImgCenter - xBoxCenter;
-//            double leftBias = xImgCenter - centeredBias;
+            double leftBias = xImgCenter - centeredBias;
             if (xDiff < centeredBias) { // Box is approximately in center of image
                 if (inRange(distance)) { // If BinBot is in reach of the object
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up

@@ -133,6 +133,7 @@ public class DemoClient extends JFrame {
 
         System.out.println("Sending payload to BinBot");
         this.botConnection.send(toBinBot.json());
+        this.botConnection.close();
         return processed_image;
     }
 
