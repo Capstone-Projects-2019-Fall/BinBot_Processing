@@ -2,14 +2,13 @@ package edu.temple.capstone.BinBotServer;
 
 import edu.temple.capstone.BinBotServer.connections.BotConnection;
 import edu.temple.capstone.BinBotServer.instructions.Instruction;
+import edu.temple.capstone.BinBotServer.mobileInterface.AppConnectionThread;
 import org.opencv.core.Core;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 
@@ -30,9 +29,12 @@ public class DemoClient extends JFrame {
     }
 
     private JPanel contentPane;
-    private static final int PORT = 7001;
+    private static final int BOT_PORT = 7001;
+    private final static int APP_PORT = 7002;
     private BotConnection botConnection;
+    private static AppConnectionThread appConnectionThread;
     public WasteDetector detector;
+    public PatrolSequence patrolSequence;
 
     /**
      * Main class to test the image capturing and display lifecycle of BinBot. The Robot's Raspberry Pi software will
@@ -52,6 +54,30 @@ public class DemoClient extends JFrame {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * Configures connection to the BinBot processing server via the ServerConnection class.
+     *
+     * @author Sean Reddington
+     * @version 1.0
+     * @since 2019-12-01
+     */
+    public void setup() throws IOException {
+        System.out.println("BinBot server starting...");
+        this.detector = new WasteDetector();
+        this.patrolSequence = new PatrolSequence();
+
+        // Android app connection
+        appConnectionThread = new AppConnectionThread(APP_PORT);
+        appConnectionThread.start();
+        System.out.println("AppConnectionThread started");
+
+        // BinBot connection
+        this.botConnection = new BotConnection(BOT_PORT);
+        System.out.println("Waiting for connections...");
+        botConnection.accept();
+        System.out.println("Connection established!");
 
     }
 
@@ -80,28 +106,13 @@ public class DemoClient extends JFrame {
     }
 
     /**
-     * Configures connection to the BinBot processing server via the ServerConnection class.
-     *
-     * @author Sean Reddington
-     * @version 1.0
-     * @since 2019-12-01
-     */
-    public void setup() throws IOException {
-        this.detector = new WasteDetector();
-        this.botConnection = new BotConnection(PORT);
-        System.out.println("Waiting for connections...");
-        botConnection.accept();
-        System.out.println("Connection established!");
-    }
-
-    /**
      * Receives a payload from BinBot's Raspberry Pi via the BotConnection instance.
      *
      * @author Sean Reddington
      * @version 1.0
      * @since 2019-12-01
      */
-    private BufferedImage receiveCapture() {
+    private BufferedImage processPayload() {
         System.out.println("Attempting to receive string from connection...");
         String jsonReceive = this.botConnection.receive();
         //        System.out.println("received: " + jsonReceive);
@@ -109,7 +120,7 @@ public class DemoClient extends JFrame {
         Instruction fromBinBot = new Instruction(jsonReceive);
 //        BufferedImage processed_image = instruction.getImage();
         BufferedImage processed_image = this.detector.imageDetect(fromBinBot.getImage());
-        Instruction toBinBot = fromBinBot.generateInstruction(this.detector);
+        Instruction toBinBot = fromBinBot.generateInstruction(this.detector, this.patrolSequence);
 //        BufferedImage processed_image = this.detector.getBufferedImage();
 
 //        //Write image from BinBot to file
@@ -122,7 +133,6 @@ public class DemoClient extends JFrame {
 
         System.out.println("Sending payload to BinBot");
         this.botConnection.send(toBinBot.json());
-        this.botConnection.accept();
         return processed_image;
     }
 
@@ -136,9 +146,20 @@ public class DemoClient extends JFrame {
      */
     @Override
     public void paint(Graphics g) {
-        g = contentPane.getGraphics();
-        BufferedImage image = receiveCapture();
-        g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
+        System.out.println(appConnectionThread.poweredState());
+        while (appConnectionThread.poweredState()) {
+            g = contentPane.getGraphics();
+            BufferedImage image = processPayload();
+            g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
+            botConnection.accept();
+        }
+
+//        // Without mobile app
+//        g = contentPane.getGraphics();
+//        BufferedImage image = loop();
+//        g.drawImage(image, 0, 0, this); // Draw the new image to the JFrame
+//        botConnection.accept();
+
     }
 
     /**

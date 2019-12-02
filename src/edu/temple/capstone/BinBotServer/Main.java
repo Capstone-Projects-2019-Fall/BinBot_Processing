@@ -90,22 +90,22 @@ public class Main {
     }
 
     public static Instruction generateInstruction(Instruction prev) {
-        Instruction retval = null;
         Status status = null;
+        List<Movement> treads = new ArrayList<>();
         Movement movement = null;
 
-        wasteDetector.loadImage(prev.getImage());
         List<Prediction> preds = wasteDetector.getPredictions();
         if (preds == null || preds.isEmpty()) {
             status = Status.PATROL;
-            movement = patrolSequence.next();
+            treads.add(patrolSequence.next());
         } else {
             Prediction p = preds.get(0);
-            movement = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
+            treads = TreadInstruction.calcInstructions(p.getUpperLeftX(), p.getUpperLeftY(),
                     p.getWidth(), p.getHeight(),
                     p.getParentImageWidth(), p.getParentImageHeight(), prev.distance
-            ).get(0);
-            if (movement.angle() == 0.0) {
+            );
+            movement = treads.get(0);
+            if (movement.angle() == 0.0 && movement.distance() == 1.0) { // in range of arm
                 status = Status.RETRIEVE;
             } else {
                 status = Status.MOVE;
@@ -114,9 +114,6 @@ public class Main {
             patrolSequence.reset();
         }
 
-        List<Movement> treads = new ArrayList<>();
-        treads.add(movement);
-
-        return new Instruction(status, null, treads, null);
+        return new Instruction(status, wasteDetector.getBufferedImage(), treads, null);
     }
 }

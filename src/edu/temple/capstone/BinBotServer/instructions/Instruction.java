@@ -75,11 +75,10 @@ public class Instruction {
 //        }
     }
 
-    public Instruction generateInstruction(WasteDetector wasteDetector) {
+    public Instruction generateInstruction(WasteDetector wasteDetector, PatrolSequence patrolSequence) {
         Status status = null;
         List<Movement> treads = new ArrayList<>();
         Movement movement = null;
-        PatrolSequence patrolSequence = new PatrolSequence();
 
         List<Prediction> preds = wasteDetector.getPredictions();
         if (preds == null || preds.isEmpty()) {
