@@ -23,22 +23,26 @@ import java.util.List;
  * @version 2.0
  * @since 2019-11-16
  */
-public class WasteDetector {
+class WasteDetector {
 
     private Mat mat;
     private BufferedImage bufferedImage;
-    private SavedModelBundle model;
+    private SavedModelBundle model, model2;
     private ArrayList<Prediction> predictions;
     private long startTime, endTime, mostRecentLatency;
 
     final private int CUP = 47;
     final private int FORK = 48;
+    final private int PERSON = 1;
 
     //This value can be adjusted, currently only showing boxes with 70% or more prediction score
     final private float minimumScore = .70f;
 
     //This array can be modified to contain classes you wish to predict
-    final private int[] desiredClasses = {FORK, CUP};
+    final private int[] desiredClasses = {FORK, CUP, PERSON};
+
+    //This value represents the percent difference between culled predictions
+    final private float cullPercent = .02f;
 
     // Loading the OpenCV core library
     static {
@@ -53,7 +57,9 @@ public class WasteDetector {
      */
     public WasteDetector() {
         String modelPath = "res/faster_rcnn_inception_v2_coco_2018_01_28/saved_model";
+        String modelPath2 = "res/faster_rcnn_inception_v2_coco_2018_01_28/saved_model";
         model = SavedModelBundle.load(modelPath, "serve");
+        model2 = SavedModelBundle.load(modelPath2, "serve");
     }
 
     /**
@@ -64,13 +70,13 @@ public class WasteDetector {
      * @author Sean Reddington
      * @since 2019-10-25
      */
-    public BufferedImage imageDetect(BufferedImage img) {
+    BufferedImage imageDetect(BufferedImage img) {
         this.bufferedImage = img;
         startTime = System.currentTimeMillis();
         bufferedImg2Mat();
         endTime = System.currentTimeMillis();
         mostRecentLatency = endTime - startTime;
-        return this.processImage(this.mat);
+        return this.getImage(this.mat);
     }
 
     /**
@@ -105,18 +111,68 @@ public class WasteDetector {
      * @author Sean Reddington
      * @since 2019-10-25
      */
-    private BufferedImage processImage(Mat mat) {
+    private BufferedImage getImage(Mat mat) {
         getSpace(mat);
 
-        float[] scores, classes;
-        float[][] boxes;
         predictions = new ArrayList<>();
         BufferedImage outputImage = null;
 
-        List<Tensor<?>> outputs;
+        List<Tensor<?>> outputs, outputs2;
         Tensor<UInt8> input = makeImageTensor(bufferedImage);
         outputs = model.session().runner().feed("image_tensor", input)
                 .fetch("detection_scores").fetch("detection_classes").fetch("detection_boxes").run();
+        outputs2 = model2.session().runner().feed("image_tensor", input)
+                .fetch("detection_scores").fetch("detection_classes").fetch("detection_boxes").run();
+
+        predictions = new ArrayList<>();
+
+        createPredictions(outputs);
+        createPredictions(outputs2);
+
+        if (predictions.size() > 0) {
+
+            //Assign the thickness of the box based on the idea that a 600 x 600 image would result in 1 pixel
+            float[] predictionScale = {bufferedImage.getWidth(), bufferedImage.getHeight()};
+            int thickness = Math.round((1.0f / 600) * ((predictionScale[0] + predictionScale[1]) / 2));
+
+            for (Prediction prediction : predictions) {
+
+                if (prediction.getCertainty() > minimumScore) {
+
+                    Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
+                            new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
+                            new Scalar(0, 255, 0), thickness);
+                    Imgproc.putText(mat, "Class:" + prediction.getIdClass() + ", " +
+                                    prediction.getCertainty(),
+                            new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1, 1,
+                            new Scalar(0, 255, 0));
+
+                }
+            }
+        }
+
+        int w = mat.cols();
+        int h = mat.rows();
+        int type = BufferedImage.TYPE_3BYTE_BGR;
+        outputImage = new BufferedImage(w, h, type);
+
+        WritableRaster raster = outputImage.getRaster();
+        DataBufferByte dataBuffer = (DataBufferByte)raster.getDataBuffer();
+        byte[] data = dataBuffer.getData();
+        mat.get(0, 0, data);
+
+        if (outputImage != null) {
+            return outputImage;
+        }
+        else {
+            return bufferedImage;
+        }
+    }
+
+    private void createPredictions(List<Tensor<?>> outputs) {
+
+        float[] scores, classes;
+        float[][] boxes;
 
         try (Tensor<Float> scoresT = outputs.get(0).expect(Float.class);
              Tensor<Float> classesT = outputs.get(1).expect(Float.class);
@@ -146,13 +202,13 @@ public class WasteDetector {
                     box[3] = box[3] * predictionScale[0];
                 }
 
-                predictions = new ArrayList<>();
                 long predictionTimeStamp = System.currentTimeMillis();
 
                 for (int i = 0; i < boxes.length; i++) {
                     if ((boxes[i][0] + boxes[i][1] + boxes[i][2] + boxes[i][3]) == 0) {
                         break;
-                    } else {
+                    }
+                    else {
                         int y1 = Math.round(boxes[i][0]);
                         int x1 = Math.round(boxes[i][1]);
                         int y2 = Math.round(boxes[i][2]);
@@ -160,56 +216,29 @@ public class WasteDetector {
                         //This will only add predictions to the list if they are of a desired class
                         for (int desiredClass : desiredClasses) {
                             if (classes[i] == desiredClass) {
-                                predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
-                                        predictionTimeStamp));
+                                boolean doAdd = true;
+                                if (predictions.size() > 0) {
+                                    for (Prediction prediction : predictions) {
+                                        int widthRange = Math.round(prediction.getParentImageWidth() * cullPercent);
+                                        int heightRange = Math.round(prediction.getParentImageHeight() * cullPercent);
+                                        if ((Math.abs(x1 - prediction.getUpperLeftX()) <= widthRange) &&
+                                                (Math.abs(x2 - prediction.getLowerRightX()) <= widthRange) &&
+                                                (Math.abs(y1 - prediction.getUpperLeftY()) <= heightRange) &&
+                                                (Math.abs(y2 - prediction.getLowerRightY()) <= heightRange)) {
+                                            doAdd = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (doAdd) {
+                                    predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
+                                            predictionTimeStamp));
+                                }
                             }
                         }
                     }
                 }
-
-                if (predictions.size() > 0) {
-
-                    //Assign the thickness of the box based on the idea that a 600 x 600 image would result in 1 pixel
-                    int thickness = Math.round((1.0f / 600) * ((predictionScale[0] + predictionScale[1]) / 2));
-
-                    for (Prediction prediction : predictions) {
-
-                        if (prediction.getCertainty() > minimumScore) {
-
-                            Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
-                                    new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
-                                    new Scalar(0, 255, 0), thickness);
-
-//                            String text = "Class:" + prediction.getIdClass() + ", " + prediction.getCertainty();
-                            String text = matchClassID(prediction.getIdClass()) + ": " + prediction.getCertainty();
-
-                            Imgproc.putText(mat, text, new Point(prediction.getUpperLeftX(),
-                                            prediction.getUpperLeftY() - thickness),
-                                    1, 1, new Scalar(0, 255, 0));
-
-                        }
-
-                    }
-
-                }
-
-                int w = mat.cols();
-                int h = mat.rows();
-                int type = BufferedImage.TYPE_3BYTE_BGR;
-                outputImage = new BufferedImage(w, h, type);
-
-                WritableRaster raster = outputImage.getRaster();
-                DataBufferByte dataBuffer = (DataBufferByte) raster.getDataBuffer();
-                byte[] data = dataBuffer.getData();
-                mat.get(0, 0, data);
             }
-        }
-
-        if (outputImage != null) {
-            bufferedImage = outputImage;
-            return outputImage;
-        } else {
-            return bufferedImage;
         }
     }
 
@@ -228,7 +257,7 @@ public class WasteDetector {
         bgr2rgb(data);
         final long BATCH_SIZE = 1;
         final long CHANNELS = 3;
-        long[] shape = new long[]{BATCH_SIZE, bufferedImage.getHeight(), bufferedImage.getWidth(), CHANNELS};
+        long[] shape = new long[] {BATCH_SIZE, bufferedImage.getHeight(), bufferedImage.getWidth(), CHANNELS};
         return Tensor.create(UInt8.class, shape, ByteBuffer.wrap(data));
     }
 
@@ -252,6 +281,34 @@ public class WasteDetector {
         this.mat.put(0, 0, pixels);
     }
 
+    public boolean containsWaste() {
+        return true;
+    }
+
+    public double objX() {
+        return 0;
+    }
+
+    public double objY() {
+        return 0;
+    }
+
+    public double objHeight() {
+        return 0;
+    }
+
+    public double objWidth() {
+        return 0;
+    }
+
+    public double imgHeight() {
+        return 0;
+    }
+
+    public double imgWidth() {
+        return 0;
+    }
+
     public void loadImage(BufferedImage img) {
         return;
     }
@@ -266,20 +323,5 @@ public class WasteDetector {
 
     public void setMostRecentLatency(long mostRecentLatency) {
         this.mostRecentLatency = mostRecentLatency;
-    }
-
-    public String matchClassID(int id) {
-        switch (id) {
-            case CUP:
-                return "CUP";
-            case FORK:
-                return "FORK";
-            default:
-                return String.valueOf(id);
-        }
-    }
-
-    public BufferedImage getBufferedImage() {
-        return this.bufferedImage;
     }
 }
