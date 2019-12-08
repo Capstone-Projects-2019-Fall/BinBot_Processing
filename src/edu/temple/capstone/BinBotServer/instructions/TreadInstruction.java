@@ -103,6 +103,7 @@ public class TreadInstruction {
      */
     public static boolean inRange(double distance) {
 //        return 0.10 < distance && distance < 0.11;
-        return 3.1 < distance && distance < 3.4;
+//        return 3.1 < distance && distance < 3.4;
+        return distance < 3.4;
     }
 }
