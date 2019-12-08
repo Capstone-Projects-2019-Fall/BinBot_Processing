@@ -59,6 +59,7 @@ public class Instruction {
         this.img = this.stringToBufferedImage(g.img);
         this.distance = g.treads.get(0).get("distance");
         this.arms = g.arms;
+
 //        JSONObject jsonObject = new JSONObject(json);
 //
 //        // Parse image first and remove from jsonObject to improve efficiency
@@ -210,7 +211,7 @@ public class Instruction {
      * @since 2019-10-25
      */
     private BufferedImage stringToBufferedImage(String s) {
-        System.out.println(s);
+//        System.out.println(s);
         BufferedImage bufferedImage = null;
         if (s != null) {
             byte[] bytes = Base64.getDecoder().decode(s);
