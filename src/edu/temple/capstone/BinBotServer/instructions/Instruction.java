@@ -57,7 +57,7 @@ public class Instruction {
         GsonInstruction g = gson.fromJson(json, GsonInstruction.class);
         this.status = Status.valueOf(g.status);
         this.img = this.stringToBufferedImage(g.img);
-        this.treads = g.treads;
+        this.distance = g.treads.get(0).distance();
         this.arms = g.arms;
 //        JSONObject jsonObject = new JSONObject(json);
 //
