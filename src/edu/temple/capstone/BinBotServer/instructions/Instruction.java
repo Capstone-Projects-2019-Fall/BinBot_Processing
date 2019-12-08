@@ -57,7 +57,7 @@ public class Instruction {
         GsonInstruction g = gson.fromJson(json, GsonInstruction.class);
         this.status = Status.valueOf(g.status);
         this.img = this.stringToBufferedImage(g.img);
-        this.distance = g.treads.get(0).distance();
+        this.distance = g.treads.get(0).get("distance");
         this.arms = g.arms;
 //        JSONObject jsonObject = new JSONObject(json);
 //
@@ -143,7 +143,8 @@ public class Instruction {
                 .append("\"img\":" + "\"");
 
         if (this.img != null) {
-            retval.append(bufferedImageToString(img));
+//            retval.append(bufferedImageToString(img));
+            retval.append("RECEIVED");
         }
 
         retval.append("\",")
