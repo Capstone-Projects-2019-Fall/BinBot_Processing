@@ -33,13 +33,18 @@ class WasteDetector {
 
     final private int CUP = 47;
     final private int FORK = 48;
-    final private int PERSON = 1;
+
+    final private int BAR_WRAPPER = 1;
+    final private int JUICE_BOX = 2;
+    final private int K_CUP = 3;
+    final private int PILL_BOTTLE = 4;
+    final private int PLASTIC_FORK = 5;
 
     //This value can be adjusted, currently only showing boxes with 70% or more prediction score
     final private float minimumScore = .70f;
 
     //This array can be modified to contain classes you wish to predict
-    final private int[] desiredClasses = {FORK, CUP, PERSON};
+    final private int[] desiredClasses = {FORK, CUP, BAR_WRAPPER, JUICE_BOX, K_CUP, PILL_BOTTLE, PLASTIC_FORK};
 
     //This value represents the percent difference between culled predictions
     final private float cullPercent = .02f;
@@ -57,7 +62,7 @@ class WasteDetector {
      */
     public WasteDetector() {
         String modelPath = "res/faster_rcnn_inception_v2_coco_2018_01_28/saved_model";
-        String modelPath2 = "res/faster_rcnn_inception_v2_coco_2018_01_28/saved_model";
+        String modelPath2 = "res/001/saved_model";
         model = SavedModelBundle.load(modelPath, "serve");
         model2 = SavedModelBundle.load(modelPath2, "serve");
     }
@@ -127,7 +132,31 @@ class WasteDetector {
         predictions = new ArrayList<>();
 
         createPredictions(outputs);
+
+        //Change the class numbers of classes 1-5 so they don't conflict with the second model
+        for (Prediction prediction : predictions) {
+            if (prediction.getIdClass() <= 5) {
+                prediction.setIdClass(prediction.getIdClass() + 100);
+            }
+        }
+
         createPredictions(outputs2);
+
+        //Remove all predictions not of a desired class
+        ArrayList<Prediction> predictionsToDrop = new ArrayList<>();
+        for (Prediction prediction : predictions) {
+            boolean keepClass = false;
+            for (int classID: desiredClasses) {
+                if (prediction.getIdClass() == classID) {
+                    keepClass = true;
+                }
+            }
+            if (keepClass) {
+                predictionsToDrop.add(prediction);
+            }
+        }
+
+        predictions.removeAll(predictionsToDrop);
 
         if (predictions.size() > 0) {
 
@@ -213,28 +242,23 @@ class WasteDetector {
                         int x1 = Math.round(boxes[i][1]);
                         int y2 = Math.round(boxes[i][2]);
                         int x2 = Math.round(boxes[i][3]);
-                        //This will only add predictions to the list if they are of a desired class
-                        for (int desiredClass : desiredClasses) {
-                            if (classes[i] == desiredClass) {
-                                boolean doAdd = true;
-                                if (predictions.size() > 0) {
-                                    for (Prediction prediction : predictions) {
-                                        int widthRange = Math.round(prediction.getParentImageWidth() * cullPercent);
-                                        int heightRange = Math.round(prediction.getParentImageHeight() * cullPercent);
-                                        if ((Math.abs(x1 - prediction.getUpperLeftX()) <= widthRange) &&
-                                                (Math.abs(x2 - prediction.getLowerRightX()) <= widthRange) &&
-                                                (Math.abs(y1 - prediction.getUpperLeftY()) <= heightRange) &&
-                                                (Math.abs(y2 - prediction.getLowerRightY()) <= heightRange)) {
-                                            doAdd = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (doAdd) {
-                                    predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
-                                            predictionTimeStamp));
+                        boolean doAdd = true;
+                        if (predictions.size() > 0) {
+                            for (Prediction prediction : predictions) {
+                                int widthRange = Math.round(prediction.getParentImageWidth() * cullPercent);
+                                int heightRange = Math.round(prediction.getParentImageHeight() * cullPercent);
+                                if ((Math.abs(x1 - prediction.getUpperLeftX()) <= widthRange) &&
+                                        (Math.abs(x2 - prediction.getLowerRightX()) <= widthRange) &&
+                                        (Math.abs(y1 - prediction.getUpperLeftY()) <= heightRange) &&
+                                        (Math.abs(y2 - prediction.getLowerRightY()) <= heightRange)) {
+                                    doAdd = false;
+                                    break;
                                 }
                             }
+                        }
+                        if (doAdd) {
+                            predictions.add(new Prediction(x1, y1, x2, y2, Math.round(classes[i]), scores[i], mat.width(), mat.height(),
+                                    predictionTimeStamp));
                         }
                     }
                 }
