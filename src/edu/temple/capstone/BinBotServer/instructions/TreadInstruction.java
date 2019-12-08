@@ -47,7 +47,9 @@ public class TreadInstruction {
                 double theta = Math.atan2(distance * 10, xDiff);
                 angle = Math.toDegrees(theta);
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(0.0, distance / 4));
+                if (!inRange(distance)) { // If BinBot is not in range, also move forward
+                    movements.add(new Movement(0.0, distance / 4));
+                }
 
             }
         } else { // Box is left of img center
@@ -66,7 +68,9 @@ public class TreadInstruction {
                 angle = Math.toDegrees(theta);
                 angle += 180.0; // angle > 180 tells BinBot to turn left
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(0.0, distance / 4));
+                if (!inRange(distance)) { // If BinBot is not in range, also move forward
+                    movements.add(new Movement(0.0, distance / 4));
+                }
             }
         }
 
