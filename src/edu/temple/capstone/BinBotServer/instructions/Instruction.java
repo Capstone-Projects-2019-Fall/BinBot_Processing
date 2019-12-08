@@ -1,5 +1,6 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
+import com.google.gson.Gson;
 import edu.temple.capstone.BinBotServer.PatrolSequence;
 import edu.temple.capstone.BinBotServer.WasteDetector;
 import edu.temple.capstone.BinBotServer.data.Prediction;
@@ -52,27 +53,33 @@ public class Instruction {
      * @since 2019-10-18
      */
     public Instruction(String json) {
-        JSONObject jsonObject = new JSONObject(json);
-
-        // Parse image first and remove from jsonObject to improve efficiency
-        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
-        jsonObject.remove("img");
-
-        this.status = Status.valueOf(jsonObject.getString("status"));
-
-//        this.treads = new ArrayList<>();
-        this.distance = jsonObject.getDouble("treads");
-
-
-//        for (Object o : jsonObject.getJSONArray("treads")) {
-//            JSONObject jo = (JSONObject) o;
-//			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
-//        }
+        Gson gson = new Gson();
+        GsonInstruction g = gson.fromJson(json, GsonInstruction.class);
+        this.status = Status.valueOf(g.status);
+        this.img = this.stringToBufferedImage(g.img);
+        this.treads = g.treads;
+        this.arms = g.arms;
+//        JSONObject jsonObject = new JSONObject(json);
 //
-//        this.arms = new ArrayList<>();
-//        for (Object o : jsonObject.getJSONArray("arms")) {
-//            arms.add(((JSONObject) o).getDouble("angle"));
-//        }
+//        // Parse image first and remove from jsonObject to improve efficiency
+//        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
+//        jsonObject.remove("img");
+//
+//        this.status = Status.valueOf(jsonObject.getString("status"));
+//
+////        this.treads = new ArrayList<>();
+//        this.distance = jsonObject.getDouble("treads");
+//
+//
+////        for (Object o : jsonObject.getJSONArray("treads")) {
+////            JSONObject jo = (JSONObject) o;
+////			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
+////        }
+////
+////        this.arms = new ArrayList<>();
+////        for (Object o : jsonObject.getJSONArray("arms")) {
+////            arms.add(((JSONObject) o).getDouble("angle"));
+////        }
     }
 
     public Instruction generateInstruction(WasteDetector wasteDetector, PatrolSequence patrolSequence) {
@@ -136,8 +143,7 @@ public class Instruction {
                 .append("\"img\":" + "\"");
 
         if (this.img != null) {
-//            retval.append(bufferedImageToString(img));
-            retval.append("RECEIVED");
+            retval.append(bufferedImageToString(img));
         }
 
         retval.append("\",")
@@ -203,12 +209,15 @@ public class Instruction {
      * @since 2019-10-25
      */
     private BufferedImage stringToBufferedImage(String s) {
+        System.out.println(s);
         BufferedImage bufferedImage = null;
-        byte[] bytes = Base64.getDecoder().decode(s);
-        try {
-            bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (s != null) {
+            byte[] bytes = Base64.getDecoder().decode(s);
+            try {
+                bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return bufferedImage;
