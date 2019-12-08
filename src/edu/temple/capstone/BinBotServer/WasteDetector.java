@@ -142,16 +142,16 @@ class WasteDetector {
 
         createPredictions(outputs2);
 
-        //Remove all predictions not of a desired class
+        //Remove all predictions not of a desired class or certainty
         ArrayList<Prediction> predictionsToDrop = new ArrayList<>();
         for (Prediction prediction : predictions) {
             boolean keepClass = false;
             for (int classID: desiredClasses) {
-                if (prediction.getIdClass() == classID) {
+                if (prediction.getIdClass() == classID && prediction.getCertainty() >= minimumScore) {
                     keepClass = true;
                 }
             }
-            if (keepClass) {
+            if (!keepClass) {
                 predictionsToDrop.add(prediction);
             }
         }
@@ -168,13 +168,15 @@ class WasteDetector {
 
                 if (prediction.getCertainty() > minimumScore) {
 
+                    int percent = Math.round(prediction.getCertainty() * 100);
+
                     Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
                             new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
                             new Scalar(0, 255, 0), thickness);
-                    Imgproc.putText(mat, "Class:" + prediction.getIdClass() + ", " +
-                                    prediction.getCertainty(),
-                            new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1, 1,
-                            new Scalar(0, 255, 0));
+                    Imgproc.putText(mat, "Class:" + classIDtoName(prediction.getIdClass()) + ", " +
+                                    percent + "%",
+                            new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1,
+                            thickness, new Scalar(0, 255, 0), 2);
 
                 }
             }
@@ -291,6 +293,34 @@ class WasteDetector {
             data[i] = data[i + 2];
             data[i + 2] = tmp;
         }
+    }
+
+    private String classIDtoName(int classID) {
+        String className = "Unknown";
+
+        if (classID == FORK) {
+            className = "Fork";
+        }
+        else if (classID == CUP) {
+            className = "Cup";
+        }
+        else if (classID == BAR_WRAPPER) {
+            className = "Bar Wrapper";
+        }
+        else if (classID == JUICE_BOX) {
+            className = "Juice Box";
+        }
+        else if (classID == K_CUP) {
+            className = "K-Cup";
+        }
+        else if (classID == PILL_BOTTLE) {
+            className = "Pill Bottle";
+        }
+        else if (classID == PLASTIC_FORK) {
+            className = "Plastic Fork";
+        }
+
+        return className;
     }
 
     /**

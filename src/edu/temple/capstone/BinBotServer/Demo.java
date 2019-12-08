@@ -24,7 +24,7 @@ public class Demo {
     private static BotConnection botConnection = null;
 
     public static void main(String[] args) throws IOException {
-        BufferedImage img = ImageIO.read(new File("res/test.jpg"));
+        BufferedImage img = ImageIO.read(new File("res/test.JPG"));
         WasteDetector detector = new WasteDetector();
         BufferedImage testImage = detector.imageDetect(img);
         ArrayList<Prediction> predictions = detector.getPredictions();
