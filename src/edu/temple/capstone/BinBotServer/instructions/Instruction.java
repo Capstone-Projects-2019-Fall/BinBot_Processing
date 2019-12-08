@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import edu.temple.capstone.BinBotServer.PatrolSequence;
 import edu.temple.capstone.BinBotServer.WasteDetector;
 import edu.temple.capstone.BinBotServer.data.Prediction;
-import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -89,7 +88,8 @@ public class Instruction {
         Movement movement = null;
 
         List<Prediction> preds = wasteDetector.getPredictions();
-        if (preds == null || preds.isEmpty()) {
+        float minimumScore = wasteDetector.getMinimumScore();
+        if (!hasPredictions(preds, minimumScore)) {
             status = Status.PATROL;
             treads.add(patrolSequence.next());
         } else {
@@ -251,5 +251,18 @@ public class Instruction {
      */
     public Status status() {
         return this.status;
+    }
+
+    public boolean hasPredictions(List<Prediction> preds, float minScore) {
+        if (preds == null || preds.isEmpty()) {
+            return false;
+        }
+        else {
+            for (Prediction pred: preds) {
+                if (pred.getCertainty() > minScore)
+                    return true;
+            }
+            return false;
+        }
     }
 }

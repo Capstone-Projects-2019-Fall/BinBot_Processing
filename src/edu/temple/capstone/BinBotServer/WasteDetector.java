@@ -282,4 +282,8 @@ public class WasteDetector {
     public BufferedImage getBufferedImage() {
         return this.bufferedImage;
     }
+
+    public float getMinimumScore() {
+        return this.minimumScore;
+    }
 }
