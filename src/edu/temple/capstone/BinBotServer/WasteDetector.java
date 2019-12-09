@@ -168,12 +168,12 @@ public class WasteDetector {
 
                 if (prediction.getCertainty() > minimumScore) {
 
-                    int percent = Math.round(prediction.getCertainty() * 100);
+                    String percent = String.format("%.02f", (prediction.getCertainty() * 100));
 
                     Imgproc.rectangle(mat, new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY()),
                             new Point(prediction.getLowerRightX(), prediction.getLowerRightY()),
                             new Scalar(0, 255, 0), thickness);
-                    Imgproc.putText(mat, "Class:" + classIDtoName(prediction.getIdClass()) + ", " +
+                    Imgproc.putText(mat, classIDtoName(prediction.getIdClass()) + ": " +
                                     percent + "%",
                             new Point(prediction.getUpperLeftX(), prediction.getUpperLeftY() - thickness), 1,
                             thickness, new Scalar(0, 255, 0), 2);
