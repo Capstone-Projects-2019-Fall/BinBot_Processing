@@ -24,9 +24,9 @@ public class PatrolSequence
 	 * @since 2019-11-12
 	 */
 	public PatrolSequence() {
-		this.add(179.0, 1.0);
-		this.add(179.0, 1.0);
-		this.add(0.0, 1.55);
+//		this.add(179.0, 1.0);
+//		this.add(179.0, 1.0);
+//		this.add(0.0, 1.55);
 		this.add(45.0, 1.0);
 		this.add(45.0, 1.0);
 		this.add(45.0, 1.0);

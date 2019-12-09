@@ -30,16 +30,13 @@ public class TreadInstruction {
         double yImgCenter = imgH / 2;
         double imgHalfPoint = (xImgCenter + yImgCenter);
 
-//        double xBoxCenter = (x + w) / 2;
-//        double yBoxCenter = (y + h) / 2;
-
         final double centeredBias = 113; // approximation that bounding box is in center of image
 
         if (xBoxCenter > xImgCenter) { // Box is right of img center
             double xDiff = xBoxCenter - xImgCenter;
             double rightBias = xImgCenter + centeredBias;
             if (xDiff < centeredBias) { // Box is approximately in center of image
-                if (inRange(distance/10.0)) { // If BinBot is in reach of the object
+                if (inRange(distance)) { // If BinBot is in reach of the object
                     System.out.println("IN RANGE");
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up
                 } else {
@@ -50,14 +47,16 @@ public class TreadInstruction {
                 double theta = Math.atan2(distance * 10, xDiff);
                 angle = Math.toDegrees(theta);
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(0.0, distance / 4));
+                if (!inRange(distance)) { // If BinBot is not in range, also move forward
+                    movements.add(new Movement(0.0, distance / 4));
+                }
 
             }
         } else { // Box is left of img center
             double xDiff = xImgCenter - xBoxCenter;
             double leftBias = xImgCenter - centeredBias;
             if (xDiff < centeredBias) { // Box is approximately in center of image
-                if (inRange(distance/10.0)) { // If BinBot is in reach of the object
+                if (inRange(distance)) { // If BinBot is in reach of the object
                     System.out.println("IN RANGE");
                     movements.add(new Movement(0.0, 1.0)); // Send instruction to pick up
                 } else {
@@ -69,7 +68,9 @@ public class TreadInstruction {
                 angle = Math.toDegrees(theta);
                 angle += 180.0; // angle > 180 tells BinBot to turn left
                 movements.add(new Movement(angle, 1.0));
-                movements.add(new Movement(0.0, distance / 4));
+                if (!inRange(distance)) { // If BinBot is not in range, also move forward
+                    movements.add(new Movement(0.0, distance / 4));
+                }
             }
         }
 
@@ -105,6 +106,8 @@ public class TreadInstruction {
      * @since 2019-12-01
      */
     public static boolean inRange(double distance) {
-        return 0.10 < distance && distance < 0.11;
+//        return 0.10 < distance && distance < 0.11;
+//        return 3.1 < distance && distance < 3.4;
+        return distance < 3.4;
     }
 }

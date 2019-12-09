@@ -1,9 +1,9 @@
 package edu.temple.capstone.BinBotServer.instructions;
 
+import com.google.gson.Gson;
 import edu.temple.capstone.BinBotServer.PatrolSequence;
 import edu.temple.capstone.BinBotServer.WasteDetector;
 import edu.temple.capstone.BinBotServer.data.Prediction;
-import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -52,27 +52,34 @@ public class Instruction {
      * @since 2019-10-18
      */
     public Instruction(String json) {
-        JSONObject jsonObject = new JSONObject(json);
+        Gson gson = new Gson();
+        GsonInstruction g = gson.fromJson(json, GsonInstruction.class);
+        this.status = Status.valueOf(g.status);
+        this.img = this.stringToBufferedImage(g.img);
+        this.distance = g.treads.get(0).get("distance");
+        this.arms = g.arms;
 
-        // Parse image first and remove from jsonObject to improve efficiency
-        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
-        jsonObject.remove("img");
-
-        this.status = Status.valueOf(jsonObject.getString("status"));
-
-//        this.treads = new ArrayList<>();
-        this.distance = jsonObject.getDouble("treads");
-
-
-//        for (Object o : jsonObject.getJSONArray("treads")) {
-//            JSONObject jo = (JSONObject) o;
-//			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
-//        }
+//        JSONObject jsonObject = new JSONObject(json);
 //
-//        this.arms = new ArrayList<>();
-//        for (Object o : jsonObject.getJSONArray("arms")) {
-//            arms.add(((JSONObject) o).getDouble("angle"));
-//        }
+//        // Parse image first and remove from jsonObject to improve efficiency
+//        this.img = this.stringToBufferedImage(jsonObject.getString("img"));
+//        jsonObject.remove("img");
+//
+//        this.status = Status.valueOf(jsonObject.getString("status"));
+//
+////        this.treads = new ArrayList<>();
+//        this.distance = jsonObject.getDouble("treads");
+//
+//
+////        for (Object o : jsonObject.getJSONArray("treads")) {
+////            JSONObject jo = (JSONObject) o;
+////			treads.add(new Movement(jo.getDouble("angle"), jo.getDouble("distance")));
+////        }
+////
+////        this.arms = new ArrayList<>();
+////        for (Object o : jsonObject.getJSONArray("arms")) {
+////            arms.add(((JSONObject) o).getDouble("angle"));
+////        }
     }
 
     public Instruction generateInstruction(WasteDetector wasteDetector, PatrolSequence patrolSequence) {
@@ -81,7 +88,8 @@ public class Instruction {
         Movement movement = null;
 
         List<Prediction> preds = wasteDetector.getPredictions();
-        if (preds == null || preds.isEmpty()) {
+        float minimumScore = wasteDetector.getMinimumScore();
+        if (!hasPredictions(preds, minimumScore)) {
             status = Status.PATROL;
             treads.add(patrolSequence.next());
         } else {
@@ -203,12 +211,15 @@ public class Instruction {
      * @since 2019-10-25
      */
     private BufferedImage stringToBufferedImage(String s) {
+//        System.out.println(s);
         BufferedImage bufferedImage = null;
-        byte[] bytes = Base64.getDecoder().decode(s);
-        try {
-            bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (s != null) {
+            byte[] bytes = Base64.getDecoder().decode(s);
+            try {
+                bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return bufferedImage;
@@ -240,5 +251,18 @@ public class Instruction {
      */
     public Status status() {
         return this.status;
+    }
+
+    public boolean hasPredictions(List<Prediction> preds, float minScore) {
+        if (preds == null || preds.isEmpty()) {
+            return false;
+        }
+        else {
+            for (Prediction pred: preds) {
+                if (pred.getCertainty() > minScore)
+                    return true;
+            }
+            return false;
+        }
     }
 }
