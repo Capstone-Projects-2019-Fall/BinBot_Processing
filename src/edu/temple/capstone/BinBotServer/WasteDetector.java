@@ -23,7 +23,7 @@ import java.util.List;
  * @version 2.0
  * @since 2019-11-16
  */
-class WasteDetector {
+public class WasteDetector {
 
     private Mat mat;
     private BufferedImage bufferedImage;
@@ -193,6 +193,7 @@ class WasteDetector {
         mat.get(0, 0, data);
 
         if (outputImage != null) {
+            bufferedImage = outputImage;
             return outputImage;
         } else {
             return bufferedImage;
@@ -369,5 +370,9 @@ class WasteDetector {
 
     public void setMostRecentLatency(long mostRecentLatency) {
         this.mostRecentLatency = mostRecentLatency;
+    }
+
+    public BufferedImage getBufferedImage() {
+        return this.bufferedImage;
     }
 }

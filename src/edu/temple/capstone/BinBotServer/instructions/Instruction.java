@@ -88,8 +88,8 @@ public class Instruction {
         Movement movement = null;
 
         List<Prediction> preds = wasteDetector.getPredictions();
-        float minimumScore = wasteDetector.getMinimumScore();
-        if (!hasPredictions(preds, minimumScore)) {
+//        float minimumScore = wasteDetector.getMinimumScore();
+        if (!hasPredictions(preds, (float) 0.7)) {
             status = Status.PATROL;
             treads.add(patrolSequence.next());
         } else {
