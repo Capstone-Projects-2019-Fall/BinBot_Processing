@@ -89,7 +89,7 @@ public class Instruction {
 
         List<Prediction> preds = wasteDetector.getPredictions();
 //        float minimumScore = wasteDetector.getMinimumScore();
-        if (!hasPredictions(preds, (float) 0.7)) {
+        if (preds == null || preds.isEmpty()) {
             status = Status.PATROL;
             treads.add(patrolSequence.next());
         } else {
